@@ -36,7 +36,6 @@ export const getCKTokenLedgerCanisterID = (
       ETH: () => "ss2fx-dyaaa-aaaar-qacoq-cai",
       USDC: () => "xevnm-gaaaa-aaaar-qafnq-cai",
       USDT: () => "cngnf-vqaaa-aaaar-qag4q-cai",
-      BTC: () => BTC_LEDGER_CANISTER_ID,
     })
   );
 
@@ -47,28 +46,6 @@ export const getLedgerCanisterID = (currency: Currency): Principal =>
     CKETHToken: (ckTokenSymbol) => getCKTokenLedgerCanisterID(ckTokenSymbol),
     BTC: () => Principal.fromText(BTC_LEDGER_CANISTER_ID),
   });
-
-const buildBTCStaticMetadata = (
-  metadata?: IcrcTokenMetadata
-): CurrencyMeta => ({
-  decimals: metadata?.decimals ?? 8,
-  thousands: 10 ** (metadata?.decimals ?? 8),
-  transactionFee: metadata?.fee ?? 10_000n,
-  renderedDecimalPlaces: 6,
-  metadata: undefined,
-  icon: BTCToken,
-  symbol: "BTC",
-  alternatives: {
-    satoshis: {
-      decimals: 0,
-      thousands: 1,
-      transactionFee: metadata?.fee ?? 10_000n,
-      metadata: undefined,
-      icon: SatoshisToken,
-      symbol: "sats",
-    },
-  },
-});
 
 /** All the static metadata info that can be extracted */
 export const getStaticManagerMetadata = (
@@ -122,9 +99,26 @@ export const getStaticManagerMetadata = (
           icon: USDTToken,
           symbol: "USDT",
         }),
-        BTC: () => buildBTCStaticMetadata(metadata),
       }),
-    BTC: () => buildBTCStaticMetadata(metadata),
+    BTC: (): CurrencyMeta => ({
+      decimals: metadata?.decimals ?? 8,
+      thousands: 10 ** (metadata?.decimals ?? 8),
+      transactionFee: metadata?.fee ?? 10_000n,
+      renderedDecimalPlaces: 6,
+      metadata: undefined,
+      icon: BTCToken,
+      symbol: "BTC",
+      alternatives: {
+        satoshis: {
+          decimals: 0,
+          thousands: 1,
+          transactionFee: metadata?.fee ?? 10_000n,
+          metadata: undefined,
+          icon: SatoshisToken,
+          symbol: "sats",
+        },
+      },
+    }),
   });
 
 export const getManagerMetadata = async (

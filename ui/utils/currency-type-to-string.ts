@@ -7,7 +7,6 @@ export const CKTokenToString = (ckTokenSymbol: CKTokenSymbol): string =>
     ETH: () => "ETH",
     USDC: () => "USDC",
     USDT: () => "USDT",
-    BTC: () => "BTC",
   });
 
 export const CurrencyToString = (currency: Currency): string =>

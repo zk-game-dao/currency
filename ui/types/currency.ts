@@ -1,11 +1,7 @@
 import { AccountIdentifier } from "@dfinity/ledger-icp";
 import { Principal } from "@dfinity/principal";
 
-export type CKTokenSymbol =
-  | { BTC: null }
-  | { ETH: null }
-  | { USDC: null }
-  | { USDT: null };
+export type CKTokenSymbol = { ETH: null } | { USDC: null } | { USDT: null };
 
 export interface Token {
   decimals: number;
