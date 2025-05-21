@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 pub struct CKTokenConfig {
     pub minter_id: Principal,
     pub ledger_id: Principal,
-    pub token_symbol: CKTokenSymbol,
+    pub token_symbol: Currency,
     pub decimals: u8,
     pub fee: u128,
 }
@@ -53,7 +53,6 @@ pub enum CKTokenSymbol {
     USDC,
     USDT,
     ETH,
-    BTC,
 }
 
 #[derive(Debug, Clone, Serialize, CandidType, Deserialize, PartialEq, Eq, Hash, Copy)]
@@ -70,7 +69,6 @@ impl Currency {
             Currency::ICP => 8,
             Currency::CKETHToken(token) => match token {
                 CKTokenSymbol::ETH => 18,
-                CKTokenSymbol::BTC => 8,
                 _ => 6,
             },
             Currency::BTC => 8,
@@ -98,8 +96,7 @@ impl From<u8> for Currency {
             1 => Currency::CKETHToken(CKTokenSymbol::USDC),
             2 => Currency::CKETHToken(CKTokenSymbol::USDT),
             3 => Currency::CKETHToken(CKTokenSymbol::ETH),
-            4 => Currency::CKETHToken(CKTokenSymbol::BTC),
-            5 => Currency::BTC,
+            4 => Currency::BTC,
             _ => panic!("Invalid currency value"),
         }
     }
@@ -113,10 +110,9 @@ impl From<Currency> for u8 {
                 CKTokenSymbol::USDC => 1,
                 CKTokenSymbol::USDT => 2,
                 CKTokenSymbol::ETH => 3,
-                CKTokenSymbol::BTC => 4,
             },
-            Currency::BTC => 5,
-            Currency::GenericICRC1(_) => 6,
+            Currency::BTC => 4,
+            Currency::GenericICRC1(_) => 5,
         }
     }
 }

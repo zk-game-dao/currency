@@ -77,7 +77,7 @@ impl CurrencyManager {
                 if !self
                     .ckerc20_tokens
                     .iter()
-                    .any(|w: &CKERC20TokenWallet| w.config.token_symbol == token)
+                    .any(|w: &CKERC20TokenWallet| w.config.token_symbol == Currency::CKETHToken(token))
                 {
                     self.ckerc20_tokens.push(CKERC20TokenWallet::new(token));
                 }
@@ -108,7 +108,7 @@ impl CurrencyManager {
             }
             Currency::CKETHToken(token) => {
                 self.ckerc20_tokens
-                    .retain(|w| w.config.token_symbol != *token);
+                    .retain(|w| w.config.token_symbol != Currency::CKETHToken(*token));
             }
             Currency::BTC => {
                 self.btc = None;
@@ -136,7 +136,7 @@ impl CurrencyManager {
                 let wallet = self
                     .ckerc20_tokens
                     .iter()
-                    .find(|w| w.config.token_symbol == *token)
+                    .find(|w| w.config.token_symbol == Currency::CKETHToken(*token))
                     .ok_or(CurrencyError::WalletNotSet)?;
                 wallet
                     .deposit(transaction_state, from_principal, amount)
@@ -178,7 +178,7 @@ impl CurrencyManager {
                 let wallet = self
                     .ckerc20_tokens
                     .iter()
-                    .find(|w| w.config.token_symbol == *token)
+                    .find(|w| w.config.token_symbol == Currency::CKETHToken(*token))
                     .ok_or(CurrencyError::WalletNotSet)?;
                 wallet.validate_allowance(from_principal, amount).await
             }
@@ -212,7 +212,7 @@ impl CurrencyManager {
                 let wallet = self
                     .ckerc20_tokens
                     .iter()
-                    .find(|w| w.config.token_symbol == *token)
+                    .find(|w| w.config.token_symbol == Currency::CKETHToken(*token))
                     .ok_or(CurrencyError::WalletNotSet)?;
                 wallet.withdraw(wallet_principal_id, amount).await
             }
@@ -246,7 +246,7 @@ impl CurrencyManager {
                 let wallet = self
                     .ckerc20_tokens
                     .iter()
-                    .find(|w| w.config.token_symbol == *token)
+                    .find(|w| w.config.token_symbol == Currency::CKETHToken(*token))
                     .ok_or(CurrencyError::WalletNotSet)?;
                 wallet.withdraw(wallet_principal_id, amount).await
             }
@@ -275,7 +275,7 @@ impl CurrencyManager {
                 let wallet = self
                     .ckerc20_tokens
                     .iter()
-                    .find(|w| w.config.token_symbol == *token)
+                    .find(|w| w.config.token_symbol == Currency::CKETHToken(*token))
                     .ok_or(CurrencyError::WalletNotSet)?;
                 wallet.get_balance(principal_id).await
             }

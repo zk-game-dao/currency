@@ -50,25 +50,24 @@ impl CKERC20TokenWallet {
             CKTokenSymbol::USDC => CKTokenConfig {
                 minter_id: Principal::from_text(USDC_MINTER_CANISTER_ID).unwrap(),
                 ledger_id: Principal::from_text(USDC_LEDGER_CANISTER_ID).unwrap(),
-                token_symbol: symbol,
+                token_symbol: crate::Currency::CKETHToken(symbol),
                 decimals: USDC_DECIMALS,
                 fee: 10_000,
             },
             CKTokenSymbol::USDT => CKTokenConfig {
                 minter_id: Principal::from_text(USDT_MINTER_CANISTER_ID).unwrap(),
                 ledger_id: Principal::from_text(USDT_LEDGER_CANISTER_ID).unwrap(),
-                token_symbol: symbol,
+                token_symbol: crate::Currency::CKETHToken(symbol),
                 decimals: USDT_DECIMALS,
                 fee: 10_000,
             },
             CKTokenSymbol::ETH => CKTokenConfig {
                 minter_id: Principal::from_text(ETH_MINTER_CANISTER_ID).unwrap(),
                 ledger_id: Principal::from_text(ETH_LEDGER_CANISTER_ID).unwrap(),
-                token_symbol: symbol,
+                token_symbol: crate::Currency::CKETHToken(symbol),
                 decimals: ETH_DECIMALS,
                 fee: 2_000_000_000_000,
             },
-            _ => unimplemented!(),
         };
         Self { config }
     }

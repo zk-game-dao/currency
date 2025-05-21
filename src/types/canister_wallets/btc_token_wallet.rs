@@ -11,7 +11,7 @@ use crate::{
     types::{
         canister_wallet::CanisterWallet,
         constants::{BTC_DECIMALS, BTC_LEDGER_CANISTER_ID, BTC_MINTER_CANISTER_ID},
-        currency::{CKTokenConfig, CKTokenSymbol},
+        currency::CKTokenConfig
     },
     utils::get_canister_state,
 };
@@ -37,7 +37,7 @@ impl CKBTCTokenWallet {
         let config = CKTokenConfig {
             minter_id: Principal::from_text(BTC_MINTER_CANISTER_ID).unwrap(),
             ledger_id: Principal::from_text(BTC_LEDGER_CANISTER_ID).unwrap(),
-            token_symbol: CKTokenSymbol::BTC,
+            token_symbol: crate::Currency::BTC,
             decimals: BTC_DECIMALS,
             fee: 10,
         };

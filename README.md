@@ -49,7 +49,6 @@ CurrencyType
 │   │   ├── ETH
 │   │   ├── USDC
 │   │   ├── USDT
-│   │   └── BTC
 │   └── BTC
 └── Fake (for in-game currencies)
 ```
