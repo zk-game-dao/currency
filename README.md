@@ -62,13 +62,135 @@ CurrencyType
 
 ## 🚀 Getting Started
 
-### Installation
+### Backend Usage (Rust Canister)
+
+The currency library provides robust support for handling multiple cryptocurrencies within your backend canisters. Here's how to implement it:
+
+#### 1. Initialize the Currency Manager
+
+The `CurrencyManager` is the central component that handles different currencies. Initialize it based on your canister's needs:
+
+```rust
+use currency::types::currency_manager::CurrencyManager;
+use currency::Currency;
+
+// Initialize a new currency manager
+let mut currency_manager = CurrencyManager::new();
+
+// Add the currencies you want to support
+currency_manager.add_currency(Currency::ICP).await?;
+currency_manager.add_currency(Currency::BTC).await?;
+currency_manager.add_currency(Currency::CKETHToken(CKTokenSymbol::USDC)).await?;
+```
+
+#### 2. Set Up Transaction State
+
+The library uses a transaction state to keep track of processed transactions:
+
+```rust
+use currency::state::TransactionState;
+
+// Initialize the transaction state
+let mut transaction_state = TransactionState::new();
+```
+
+#### 3. Handle Deposits
+
+Example of how to process a user's deposit (typically called when a user joins a table or deposits funds):
+
+```rust
+// When a user deposits to your canister
+async fn handle_user_deposit(
+    currency: Currency,
+    user_principal: Principal,
+    amount: u64,
+) -> Result<(), CurrencyError> {
+    // First validate that the user has given sufficient allowance
+    currency_manager
+        .validate_allowance(&currency, user_principal, amount)
+        .await?;
+    
+    // Then process the deposit using the allowance
+    currency_manager
+        .deposit(&mut transaction_state, &currency, user_principal, amount)
+        .await?;
+    
+    // Update your internal state as needed
+    // ...
+    
+    Ok(())
+}
+```
+
+#### 4. Handle Withdrawals
+
+Withdrawing funds back to a user's wallet:
+
+```rust
+async fn withdraw_funds(
+    currency: Currency,
+    user_principal: Principal,
+    amount: u64,
+) -> Result<(), CurrencyError> {
+    // Check if withdrawal is allowed by your business logic
+    // ...
+    
+    // Process the withdrawal
+    currency_manager
+        .withdraw(&currency, user_principal, amount)
+        .await?;
+    
+    // Update your internal state as needed
+    // ...
+    
+    Ok(())
+}
+```
+
+#### 5. Check User Balances
+
+Query a user's balance on the ledger:
+
+```rust
+async fn get_user_balance(
+    currency: Currency,
+    user_principal: Principal,
+) -> Result<u128, CurrencyError> {
+    let balance = currency_manager
+        .get_balance(&currency, user_principal)
+        .await?;
+    
+    Ok(balance)
+}
+```
+
+#### 6. Handling Generic ICRC-1 Tokens
+
+For handling any ICRC-1 compatible token:
+
+```rust
+// Create a Token definition
+let custom_token = Token::from_string(
+    Principal::from_text("ryjl3-tyaaa-aaaaa-aaaba-cai").unwrap(), // Ledger canister ID
+    "MYTOK",                                                      // Symbol
+    8                                                             // Decimals
+);
+
+// Add it to the currency manager
+currency_manager
+    .add_currency(Currency::GenericICRC1(custom_token))
+    .await?;
+```
+
+### Frontend Usage (React)
+
+#### Installation
 
 ```bash
 npm install @zk-game-dao/currency
 ```
 
-### Basic Usage
+#### Basic Usage
 
 1. Import and wrap your application with the currency context provider:
 
@@ -127,111 +249,6 @@ function BalanceDisplay() {
 }
 ```
 
-### Local Development Setup
-
-1. Clone the repository:
-```bash
-git clone https://github.com/zk-game-dao/currency-library.git
-cd currency-library
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-4. Run development server:
-```bash
-npm run storybook
-```
-
-## 💻 Core Components
-
-### Authentication Module
-
-The authentication module provides interfaces for multiple login methods:
-
-```typescript
-// Internet Identity
-type AuthDataInternetIdentity = {
-  type: "ii";
-  provider: AuthClient;
-  // Additional II-specific fields
-}
-
-// Web3Auth
-type AuthDataWeb3Auth = {
-  type: "web3auth";
-  provider: IProvider;
-  // Additional Web3Auth-specific fields
-}
-
-// Sign-In with Bitcoin
-type AuthDataSiwb = {
-  type: "siwb";
-  provider: SiwbProvider;
-  // Additional SIWB-specific fields
-}
-```
-
-### Currency Managers
-
-Currency managers provide a consistent interface for different token types:
-
-```typescript
-type CurrencyManager = {
-  meta: CurrencyMeta;
-  currencyType: CurrencyType;
-}
-
-type CurrencyMeta = {
-  decimals: number;
-  thousands: number;
-  transactionFee: bigint;
-  metadata?: IcrcTokenMetadata;
-  icon?: string;
-  symbol: string;
-  alternatives?: Record<string, CurrencyMeta>;
-}
-```
-
-### Ledger Interactions
-
-The library supports various ledger operations:
-
-```typescript
-// Fetch allowance
-async function fetchAllowance: (
-  currencyType: CurrencyType,
-  receiver: CurrencyReceiver,
-  authData: AuthData
-) => Promise<AllowanceResult>
-
-// Set allowance
-async function setAllowance: (
-  currencyType: CurrencyType,
-  receiver: CurrencyReceiver,
-  amount: bigint,
-  authData: AuthData,
-  expires_at: Date
-) => Promise<SetAllowanceResult>
-
-// Get account balance
-async function fetchBalance(
-  ledger: Principal,
-  owner: Principal,
-  subaccount?: Option<Uint8Array>
-): Promise<u128>
-
-// Transfer funds
-async function transferTo(
-  currencyType: CurrencyType,
-  receiver: CurrencyReceiver,
-  amount: bigint,
-  authData: AuthData
-): Promise<TransferResult>
-```
-
 ## 📁 Library Structure
 
 ```
@@ -251,13 +268,62 @@ async function transferTo(
     ├── lib.rs                 # Main library entry point
     ├── query.rs               # Ledger query functions
     ├── transfer.rs            # Transfer functions
-    └── currency_error.rs      # Error handling
+    ├── currency_error.rs      # Error handling
+    ├── state.rs               # Transaction state management
+    ├── canister_wallet.rs     # Wallet interfaces
     └── ...
 ```
 
 ## 🔄 Usage Examples
 
-### Authentication
+### Backend Examples
+
+#### Creating a Wallet for Multiple Currencies
+
+```rust
+// Initialize wallet support for multiple currencies
+let mut currency_manager = CurrencyManager::new();
+
+// Adding ICP support is automatic with new()
+// Add support for USDC
+currency_manager.add_currency(Currency::CKETHToken(CKTokenSymbol::USDC)).await?;
+
+// Add support for a generic ICRC-1 token
+let custom_token = Token::from_string(
+    Principal::from_text("ryjl3-tyaaa-aaaaa-aaaba-cai").unwrap(),
+    "CUSTOM",
+    8
+);
+currency_manager.add_currency(Currency::GenericICRC1(custom_token)).await?;
+```
+
+#### Processing Withdrawals with Rake
+
+```rust
+// Example for processing a game with rake collection
+async fn process_game_end(
+    winner_principal: Principal,
+    pot_amount: u64,
+    rake_amount: u64,
+    currency: Currency
+) -> Result<(), CurrencyError> {
+    // Withdraw winnings minus rake to the winner
+    currency_manager
+        .withdraw(&currency, winner_principal, pot_amount - rake_amount)
+        .await?;
+    
+    // Transfer the rake to a rake wallet
+    currency_manager
+        .withdraw_rake(&currency, RAKE_WALLET_PRINCIPAL, rake_amount)
+        .await?;
+        
+    Ok(())
+}
+```
+
+### Frontend Examples
+
+#### Authentication
 
 ```typescript
 import { useAuth } from '@zk-game-dao/currency';
@@ -279,7 +345,7 @@ if (authData) {
 }
 ```
 
-### Transfer Funds
+#### Transfer Funds
 
 ```typescript
 import { Principal } from '@dfinity/principal';
@@ -300,7 +366,11 @@ async function sendFunds(authData: AuthData) {
 - [ ] Integrate with more authentication providers
 - [ ] Add transaction history based on ledger transactions
 - [ ] Enhance wallet management features
+- [ ] Support for additional ICRC standards
+- [ ] Improved security features for semi-custodial operations
 
-## 🤝 Contributing
+## 📄 License
 
-Contributions are welcome! Please read our Contributing Guide for details on our code of conduct and the process for submitting pull requests.
+This project is licensed under the [Apache License 2.0](LICENSE).  
+You are free to use, modify, and distribute this software under the terms of the Apache 2.0 license.  
+See the `LICENSE` file for more details.
