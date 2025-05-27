@@ -1,18 +1,19 @@
 import './tailwind.css';
 
-import { SiwbIdentityProvider, useSiwbIdentity } from 'ic-siwb-lasereyes-connector';
+import { useSiwbIdentity } from 'ic-siwb-lasereyes-connector';
 import React, { memo, PropsWithChildren, useMemo } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { AnonymousIdentity, HttpAgent } from '@dfinity/agent';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { Principal } from '@dfinity/principal';
-import { LaserEyesProvider, MAINNET } from '@omnisat/lasereyes';
 import {
   LayoutComponent, ProvideConfirmModal, ProvideErrorModalContext, ProvideQuery, ProvideUI
 } from '@zk-game-dao/ui';
 
-import { idlFactory as siwbIdl } from '../declarations/ic_siwb_provider';
+import {
+  ProvideSiwbLogins
+} from '../ui/auth/components/provide-btc-logins/provide-btc-logins.component';
 import { AuthClientContext, AuthClientContextData, AuthData } from '../ui/auth/types/context';
 import { host } from '../ui/auth/types/iiauth';
 import { ProvideCurrencyConfig } from '../ui/context/currency-config.context';
@@ -21,12 +22,11 @@ import { ProvideTokenRegistry } from '../ui/context/token-registry.context';
 import { CurrencyNetwork } from '../ui/types/currency-config.context';
 
 import type { Preview } from "@storybook/react";
+
 BigInt.prototype.toJSON = function () {
   return JSON.rawJSON(this.toString());
 };
 
-import type { _SERVICE as siwbService } from '../declarations/ic_siwb_provider/ic_siwb_provider.did';
-import { ProvideSiwbLogins } from '../ui/auth/components/provide-btc-logins/provide-btc-logins.component';
 const PreviewAuth = memo<PropsWithChildren<{ authContext: AuthClientContextData }>>(({ children, authContext }) => {
   const siwb = useSiwbIdentity();
 
@@ -125,11 +125,11 @@ const preview: Preview = {
         icon: 'platform',
         items: [
           {
-            value: 'zkp',
+            value: 'zkpoker',
             title: 'zkpoker.app',
           },
           {
-            value: 'pp',
+            value: 'purepoker',
             title: 'purepoker.app',
           }
         ],
@@ -151,7 +151,6 @@ const preview: Preview = {
   },
   decorators: [
     (Story, context) => {
-
       try {
 
         let _window = window;

@@ -2,13 +2,16 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { RealCurrencyInputComponent } from '../currency-type-input.component';
 import { List, ListItem } from '@zk-game-dao/ui';
+import { useState } from 'react';
 
 const meta: Meta<typeof RealCurrencyInputComponent> = {
   title: 'UI/Inputs/RealCurrencyType',
-  component: RealCurrencyInputComponent,
+  render: (args) => {
+    const [selectedValue, setSelectedValue] = useState(args.value);
+    return <RealCurrencyInputComponent {...args} value={selectedValue} onChange={setSelectedValue} />;
+  },
   args: {
     label: 'Hello world',
-    onChange: (value) => console.log('onChange', value),
   }
 };
 
