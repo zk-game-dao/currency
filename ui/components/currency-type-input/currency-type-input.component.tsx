@@ -80,6 +80,7 @@ export const RealCurrencyInputComponent = memo<{
   const value = useMemo(() => _value && CurrencyTypeSerializer.serialize({ Real: _value }), [_value]);
 
   const onChange = (value?: string) => {
+    console.log({ value });
     if (value) {
       const currency = CurrencyTypeSerializer.deserialize(value);
       if ('Fake' in currency)

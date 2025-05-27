@@ -11,10 +11,16 @@ import { IsSameCKTokenSymbol, IsSameCurrency, IsSameCurrencyType, IsSameToken } 
 export const CurrencyMetaIconComponent = memo<{ className?: string; meta: Pick<CurrencyMeta, 'icon' | 'symbol'> & { metadata?: Pick<IcrcTokenMetadata, 'name'> } }>(
   ({ meta, className }) => {
     if (!meta.icon)
-      return <span className='type-tiny text-material-medium-3'>{meta.symbol}</span>
+      return (
+        <span className='type-tiny font-medium text-white'>
+          <span className='text-primary-400'>[</span>
+            {meta.symbol}
+          <span className='text-primary-400'>]</span>
+        </span>
+      );
     return (
       <span
-        className={classNames(className, 'inline-flex', 'flex-shrink-0 flex-grow-0', {
+        className={classNames(className, 'inline-flex', 'flex-shrink-0 flex-grow-0 rounded-[2px] overflow-hidden', {
           'size-5': !className || !className.includes('size-') || !className.includes('h-') || !className.includes('w-'),
         })}>
         <img
