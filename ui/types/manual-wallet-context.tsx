@@ -171,8 +171,8 @@ export const useManualWalletTransfer = (
               },
             ] as any,
             onSuccess: async (res) => {
-              if ('Err' in res)
-                return reject(res.Err);
+              if (typeof res === 'object' && 'Err' in res)
+                return reject((res as any).Err);
               console.log("Transfer successful", res);
               resolve(res)
             },
