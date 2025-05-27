@@ -128,8 +128,14 @@ export const useManualWalletTransfer = (
       switch (walletType) {
         case "plug":
         case "bitfinityWallet":
-          if (!(await window.ic[walletType].isConnected()))
-            await window.ic[walletType].requestConnect();
+          console.log("Connected ing..", walletType);
+          try {
+            if (!(await window.ic[walletType].isConnected()))
+              await window.ic[walletType].requestConnect();
+          } catch (e) {
+            console.error("Error connecting to wallet", e);
+            throw new UserError("Failed to connect to wallet. Please try again.");
+          }
           break;
         default:
           throw new UserError(`${CurrencyTypeToString(currencyType)} not supported by ${walletType}`);
@@ -146,38 +152,44 @@ export const useManualWalletTransfer = (
 
         const { methodName, idl, destination } = getCurrencySpecificData(currencyType.Real, to);
         const canisterId = getLedgerCanisterID(currencyType.Real).toText();
-
-        console.log(window.ic[walletType], destination, methodName, idl, canisterId, amount, transactionFee);
-
-        return window.ic[walletType].batchTransactions([{
-          idl,
-          canisterId,
-          methodName: methodName as any,
-          args: [
-            {
-              to: destination as any,
-              fee: { e8s: transactionFee },
-              amount: { e8s: amount },
-              memo: 0n,
-              from_subaccount: [],
-              created_at_time: [
-                { timestamp_nanos: BigInt(Date.now()) * 1_000_000n },
-              ],
+        try {
+          window.ic[walletType].batchTransactions([{
+            idl,
+            canisterId,
+            methodName: methodName as any,
+            args: [
+              {
+                to: {
+                  owner: to,
+                  subaccount: [],
+                },
+                fee: [transactionFee],
+                amount: amount,
+                memo: [],
+                from_subaccount: [],
+                created_at_time: [BigInt(Date.now()) * 1_000_000n],
+              },
+            ] as any,
+            onSuccess: async (res) => {
+              if ('Err' in res)
+                return reject(res.Err);
+              console.log("Transfer successful", res);
+              resolve(res)
             },
-          ],
-          onSuccess: async (res) => {
-            console.log("Transfer successful", res);
-            resolve(res)
-          },
-          onFail: async (e) => {
-            console.log("Somehow failed", e);
-            reject(
-              new UserError(
-                "Transfer failed. Please check your balance and try again.",
-              ),
-            );
-          },
-        }]);
+            onFail: async (e) => {
+              console.log("Somehow failed", e);
+              reject(
+                new UserError(
+                  "Transfer failed. Please check your balance and try again.",
+                ),
+              );
+            },
+          }]);
+        }
+        catch (e) {
+          console.error("Error during transfer", e);
+          reject(new UserError("Transfer failed. Please try again later."));
+        }
       });
     },
     onSuccess: (_, amount) => {
