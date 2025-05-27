@@ -30,7 +30,8 @@ export const TokenAmountToString = (
   if ("decimals" in meta) {
     const bigDecimals = Big(10).pow(meta.decimals);
     const bigRendered = Big(amount.toString()).div(bigDecimals);
-    if (bigRendered.gte(10000)) return `${bigRendered.div(1000).round().toNumber().toLocaleString()} K`;
+    if (bigRendered.gte(10000))
+      return `${bigRendered.div(1000).round().toNumber().toLocaleString()} K`;
   }
   return BigIntToString(
     amount,

@@ -24,11 +24,11 @@ export const fetchBalance = async (
   const canisterId = getLedgerCanisterID(currencyType.Real);
 
   const ledgerCanister = IcrcLedgerCanister.create({
+    agent: authData.agent,
     canisterId,
   });
 
   return ledgerCanister.balance({
     owner: authData.principal,
-    subaccount: [],
   });
 };
