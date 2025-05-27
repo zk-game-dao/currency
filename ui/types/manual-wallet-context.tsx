@@ -147,6 +147,8 @@ export const useManualWalletTransfer = (
         const { methodName, idl, destination } = getCurrencySpecificData(currencyType.Real, to);
         const canisterId = getLedgerCanisterID(currencyType.Real).toText();
 
+        console.log(window.ic[walletType], destination, methodName, idl, canisterId, amount, transactionFee);
+
         return window.ic[walletType].batchTransactions([{
           idl,
           canisterId,
@@ -163,7 +165,10 @@ export const useManualWalletTransfer = (
               ],
             },
           ],
-          onSuccess: async (res) => resolve(res),
+          onSuccess: async (res) => {
+            console.log("Transfer successful", res);
+            resolve(res)
+          },
           onFail: async (e) => {
             console.log("Somehow failed", e);
             reject(

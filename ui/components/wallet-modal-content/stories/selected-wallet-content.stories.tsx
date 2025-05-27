@@ -24,3 +24,4 @@ export const ICPInModal: Story = {
 };
 export const BTC: Story = { args: { selectedWallet: 'BTC' } };
 export const ETH: Story = { args: { selectedWallet: 'ETH' } };
+export const DCD: Story = { args: { selectedWallet: 'DCD' } };

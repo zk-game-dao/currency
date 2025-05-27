@@ -3,9 +3,12 @@ import { memo, PropsWithChildren, ReactNode } from 'react';
 import { useAuth } from '../../../auth';
 import { Currency } from '../../../types';
 import { ProvideWalletModalContext } from '../wallet-modal.context';
+import { ProvideManualWalletContext } from '../../../context/manual-wallet-provider';
+import { Principal } from '@dfinity/principal';
+import { encodeSymbolTo8Bytes } from '../../../utils';
 
 export type WalletStoryProviderProps = {
-  selectedWallet: 'ICP' | 'ETH' | 'BTC';
+  selectedWallet: 'ICP' | 'ETH' | 'BTC' | 'DCD';
   requiredBalance?: bigint;
 };
 
@@ -14,7 +17,7 @@ export const WalletStoryProviderArgTypes = {
     control: {
       type: 'select',
     },
-    options: ['ICP', 'ETH', 'BTC'],
+    options: ['ICP', 'ETH', 'BTC', 'DCD'],
     description: 'Selected wallet type',
     table: {
       type: { summary: 'string' },
@@ -46,6 +49,9 @@ const BuildProps = (args: WalletStoryProviderProps): { currency: Currency } => {
     case 'BTC':
       currency = { BTC: null }
       break;
+    case 'DCD':
+      currency = { GenericICRC1: { decimals: 8, ledger_id: Principal.from('xsi2v-cyaaa-aaaaq-aabfq-cai'), symbol: encodeSymbolTo8Bytes('DCD') } }
+      break;
   }
 
   return { currency };
@@ -59,17 +65,19 @@ export const WalletStoryProvider = memo<PropsWithChildren<WalletStoryProviderPro
     return <p>Please select a sign in provicer in storybook</p>
 
   return (
-    <ProvideWalletModalContext
-      currency={currency}
-      onBack={() => { }}
-      onSubmit={() => { }}
-      requiredBalance={requiredBalance ? {
-        currencyType: { Real: currency },
-        currencyValue: requiredBalance * 10n ** 8n,
-      } : undefined}
-    >
-      {children}
-    </ProvideWalletModalContext>
+    <ProvideManualWalletContext>
+      <ProvideWalletModalContext
+        currency={currency}
+        onBack={() => { }}
+        onSubmit={() => { }}
+        requiredBalance={requiredBalance ? {
+          currencyType: { Real: currency },
+          currencyValue: requiredBalance * 10n ** 8n,
+        } : undefined}
+      >
+        {children}
+      </ProvideWalletModalContext>
+    </ProvideManualWalletContext>
   );
 });
 

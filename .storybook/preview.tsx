@@ -182,10 +182,10 @@ const preview: Preview = {
       let enabledNetworks: CurrencyNetwork[] | undefined;
 
       switch (network) {
-        case 'zkp':
+        case 'zkpoker':
           disabledNetworks = ['btc'];
           break;
-        case 'pp':
+        case 'purepoker':
           enabledNetworks = ['btc'];
           break;
       }
