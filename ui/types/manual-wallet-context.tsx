@@ -152,24 +152,41 @@ export const useManualWalletTransfer = (
 
         const { methodName, idl, destination } = getCurrencySpecificData(currencyType.Real, to);
         const canisterId = getLedgerCanisterID(currencyType.Real).toText();
+
+        let args: Record<string, unknown>[] = []
+        if ('ICP' in currencyType.Real) {
+          args = [{
+            to: AccountIdentifier.fromPrincipal({
+              principal: to,
+            }).toHex(),
+            fee: { e8s: transactionFee },
+            amount: { e8s: amount },
+            memo: BigInt(0),
+            from_subaccount: [],
+            created_at_time: [
+              { timestamp_nanos: BigInt(Date.now()) * 1_000_000n },
+            ],
+          }];
+        } else {
+          args = [{
+            to: {
+              owner: to,
+              subaccount: [],
+            },
+            fee: [transactionFee],
+            amount: amount,
+            memo: [],
+            from_subaccount: [],
+            created_at_time: [BigInt(Date.now()) * 1_000_000n],
+          }];
+        }
+
         try {
           window.ic[walletType].batchTransactions([{
             idl,
             canisterId,
             methodName: methodName as any,
-            args: [
-              {
-                to: {
-                  owner: to,
-                  subaccount: [],
-                },
-                fee: [transactionFee],
-                amount: amount,
-                memo: [],
-                from_subaccount: [],
-                created_at_time: [BigInt(Date.now()) * 1_000_000n],
-              },
-            ] as any,
+            args: args as any,
             onSuccess: async (res) => {
               if (typeof res === 'object' && 'Err' in res)
                 return reject((res as any).Err);
