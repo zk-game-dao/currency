@@ -3,7 +3,7 @@ import { AccountIdentifier, LedgerCanister } from "@dfinity/ledger-icp";
 
 import { AuthData } from "../auth";
 import { CurrencyType } from "../types/currency";
-import { getLedgerCanisterID } from "../types/manager-map";
+import { getLedgerCanisterID } from "./manager";
 
 export const fetchBalance = async (
   currencyType: CurrencyType,

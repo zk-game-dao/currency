@@ -8,16 +8,20 @@ import { CurrencyMeta } from '../../types';
 import { CKTokenSymbol, Currency, CurrencyType, Token } from '../../types/currency';
 import { IsSameCKTokenSymbol, IsSameCurrency, IsSameCurrencyType, IsSameToken } from '../../utils';
 
-export const CurrencyMetaIconComponent = memo<{ className?: string; meta: Pick<CurrencyMeta, 'icon' | 'symbol'> & { metadata?: Pick<IcrcTokenMetadata, 'name'> } }>(
+export const CurrencyMetaIconComponent = memo<{ className?: string; meta: Pick<CurrencyMeta, 'isFetched' | 'icon' | 'symbol'> & { metadata?: Pick<IcrcTokenMetadata, 'name'> } }>(
   ({ meta, className }) => {
-    if (!meta.icon)
+    if (!meta.icon) {
       return (
-        <span className='type-tiny font-medium text-white'>
-          <span className='text-primary-400'>[</span>
-            {meta.symbol}
-          <span className='text-primary-400'>]</span>
+        <span
+          className={classNames(
+            'type-tiny font-medium',
+            { 'text-animation-shimmer': !meta.isFetched },
+          )}
+        >
+          {meta.symbol.startsWith('ck') ? meta.symbol.slice(2) : meta.symbol}
         </span>
       );
+    }
     return (
       <span
         className={classNames(className, 'inline-flex', 'flex-shrink-0 flex-grow-0 rounded-[2px] overflow-hidden', {

@@ -2,7 +2,7 @@ export * from "./meta";
 export * from "./manager";
 export * from "./manual-wallet-context";
 export * from "./EIP6963.context";
-export * from "./manager-map";
+export * from "../utils/manager/manager-map";
 export * from "./chain-fusion.context";
 export * from "./currency";
 export * from "./allowance.context";

@@ -12,7 +12,7 @@ import { useTransactionFee } from '../../hooks/transaction-fee';
 import { Queries } from '../../queries';
 import { useChainFusion, useShowingNativeCurrency } from '../../types/chain-fusion.context';
 import { Currency, CurrencyReceiver } from '../../types/currency';
-import { buildCurrencyManager } from '../../types/manager-map';
+import { buildCurrencyManager } from '../../utils/manager/manager-map';
 import { useManualWallet, useManualWalletTransfer } from '../../types/manual-wallet-context';
 import { CurrencyToString, CurrencyTypeToString } from '../../utils/currency-type-to-string';
 import { TokenAmountToString } from '../../utils/token-amount-conversion';

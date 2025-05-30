@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 import { useCurrencyManagerMeta } from '../../hooks/currency-manager.hook';
 import { CKTokenSymbol, CurrencyType, Token } from '../../types/currency';
@@ -7,8 +7,9 @@ import { CurrencyTypeIconComponent } from '../token-icon/token-icon.component';
 
 export const CurrencyTypeLabelComponent = memo<{ currencyType: CurrencyType; }>(({ currencyType }) => {
   const { metadata } = useCurrencyManagerMeta(currencyType);
-  if (!metadata) return <>{CurrencyTypeToString(currencyType)}</>;
-  return <>{metadata.name}</>;
+  const name = useMemo(() => metadata?.name ?? CurrencyTypeToString(currencyType), [metadata]);
+
+  return <>{name.startsWith('ck') ? name.slice(2) : name}</>;
 });
 
 export const GenericICRC1LabelComponent = memo<{ value: Token; }>(({ value }) => <>{CurrencyTypeToString({ Real: { GenericICRC1: value } })}</>);

@@ -139,7 +139,7 @@ const preview: Preview = {
   },
   initialGlobals: {
     authentication: 'internet_identity',
-    network: 'zkp',
+    network: 'zkpoker',
   },
   parameters: {
     controls: {

@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { CurrencyInputComponent } from '../currency-input.component';
 import { useState } from 'react';
+
 import { List, ListItem } from '@zk-game-dao/ui';
+
+import { DCD_MOCK } from '../../../../.storybook/__mocks__/tokens';
+import { CurrencyInputComponent } from '../currency-input.component';
 
 const meta: Meta<typeof CurrencyInputComponent> = {
   title: 'UI/Inputs/Currency',
@@ -25,6 +28,7 @@ type Story = StoryObj<typeof CurrencyInputComponent>;
 
 export const Default: Story = {};
 export const DefaultICP: Story = { args: { currencyType: { Real: { ICP: null } }, value: 100000n } };
+export const DefaultDCD: Story = { args: { currencyType: DCD_MOCK.currencyType, value: 100000n } };
 export const SmallAmount: Story = {
   args: {
     value: 1n,

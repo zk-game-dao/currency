@@ -26,7 +26,7 @@ const CountDecimals = (value: number) => {
   return value.toString().split(".")[1]?.length || 0;
 };
 
-export const CurrencyComponentInner = memo<CurrencyComponentInnerProps & Pick<CurrencyMeta, 'decimals' | 'symbol' | 'icon' | "renderedDecimalPlaces">>(
+export const CurrencyComponentInner = memo<CurrencyComponentInnerProps & Pick<CurrencyMeta, 'decimals' | 'symbol' | 'isFetched' | 'icon' | "renderedDecimalPlaces">>(
   ({
     hideSymbol: hideToken,
     size = "medium",
@@ -89,37 +89,26 @@ export const CurrencyComponentInner = memo<CurrencyComponentInnerProps & Pick<Cu
           className,
           forceFlex ? 'flex' : 'inline-flex',
           "justify-center items-center shrink-0",
-          { "gap-1": size === "small" },
+          {
+            'gap-1': size === "small",
+            'gap-2': size === "medium" || size === "big"
+          },
           reverse ? "flex-row-reverse" : "flex-row",
         )}
       >
         {!hideToken && (
-          <div
-            className={classNames("flex-col justify-center items-center",
-              forceFlex ? 'block' : 'inline',
-              {
-                [classNames("w-[24px] h-[24px]", reverse ? "ml-1" : "mr-1")]:
-                  size === "medium",
-                [classNames("w-[32px] h-[32px]", reverse ? "ml-2" : "mr-2")]:
-                  size === "big",
-                [classNames("w-[14px] h-[14px]", reverse ? "ml-1" : "mr-1")]:
-                  size === "small",
-                'leading-[10px]': size === "small",
-              })}
-          >
-            <CurrencyMetaIconComponent
-              className={classNames(forceFlex ? 'block' : 'inline', {
-                "w-[24px] h-[24px]": size === "medium",
-                "w-[32px] h-[32px]": size === "big",
-                "w-[12px] h-[12px] scale-[1.5]": size === "small",
-              })}
-              meta={meta}
-            />
-          </div>
+          <CurrencyMetaIconComponent
+            className={classNames(forceFlex ? 'flex' : 'inline-flex', {
+              "w-[24px] h-[24px]": size === "medium",
+              "w-[32px] h-[32px]": size === "big",
+              "w-[12px] h-[12px] scale-[1.5]": size === "small",
+            })}
+            meta={meta}
+          />
         )}
         <span
           ref={ref}
-          className={classNames({
+          className={classNames('flex', {
             "type-header": size === "big",
             "type-button-2": size === "medium",
             "type-button-3": size === "small",
@@ -137,7 +126,10 @@ export const CurrencyComponentInner = memo<CurrencyComponentInnerProps & Pick<Cu
     prevProps.currencyValue === nextProps.currencyValue &&
     IsSameCurrencyType(prevProps.currencyType, nextProps.currencyType) &&
     prevProps.decimals === nextProps.decimals &&
-    prevProps.renderedDecimalPlaces === nextProps.renderedDecimalPlaces
+    prevProps.renderedDecimalPlaces === nextProps.renderedDecimalPlaces &&
+    prevProps.symbol === nextProps.symbol &&
+    prevProps.isFetched === nextProps.isFetched &&
+    prevProps.icon === nextProps.icon
   )
 );
 

@@ -13,7 +13,7 @@ import { useTransactionFee } from '../hooks/transaction-fee';
 import { Queries } from '../queries';
 import { CurrencyTypeToString } from '../utils/currency-type-to-string';
 import { Currency, CurrencyType } from './currency';
-import { getLedgerCanisterID } from './manager-map';
+import { getLedgerCanisterID } from '../utils/manager';
 
 // Define the structure of the transaction object
 type TransferIcpTx = {

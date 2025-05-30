@@ -4,7 +4,7 @@ import { UserError } from "@zk-game-dao/ui";
 
 import { AuthData } from "../auth";
 import { CurrencyReceiver, CurrencyType } from "../types/currency";
-import { getLedgerCanisterID } from "../types/manager-map";
+import { getLedgerCanisterID } from "./manager";
 
 export const transferTo = async (
   currencyType: CurrencyType,

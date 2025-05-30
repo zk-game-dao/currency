@@ -52,7 +52,11 @@ const WalletSelectionComponent = memo<{ currency: Currency; }>(({ currency }) =>
     );
 
   if (Object.keys(wallets).length === 0)
-    return <p>Please install an EIP6963 compatible wallet</p>;
+    return (
+      <p className='text-left type-subheadline pl-4'>
+        Please install <a href="https://metamask.io/" target='_blank' className='underline hover:no-underline'>MetaMask</a>,  <a href="https://trustwallet.com/" className='underline hover:no-underline' target='_blank'>Trust Wallet</a>,  <a href="https://www.okx.com/" className='underline hover:no-underline' target='_blank'>OKX</a> or any other <a href="https://eip6963.org/" className='underline hover:no-underline' target="_blank">EIP-6963 compatible wallet</a>
+      </p>
+    );
 
   return (
     <>

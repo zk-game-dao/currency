@@ -15,6 +15,9 @@ export type CurrencyMeta = {
   /** The name of the currency */
   symbol: string;
 
+  /** Marks if this data is fetched from the ledgers metadata */
+  isFetched: boolean;
+
   /** Like satoshis for btc */
   alternatives?: Record<string, CurrencyMeta>;
 };

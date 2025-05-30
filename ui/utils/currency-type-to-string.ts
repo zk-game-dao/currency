@@ -11,8 +11,11 @@ export const CKTokenToString = (ckTokenSymbol: CKTokenSymbol): string =>
 
 export const CurrencyToString = (currency: Currency): string =>
   matchRustEnum(currency)({
-    GenericICRC1: (genericICRC1) =>
-      `${decodeSymbolFrom8Bytes(genericICRC1.symbol)}`,
+    GenericICRC1: (genericICRC1) => {
+      const symbol = `${decodeSymbolFrom8Bytes(genericICRC1.symbol)}`;
+      if (symbol.startsWith("ck")) return symbol.slice(2);
+      return symbol;
+    },
     CKETHToken: (ckCurrencySymbol) => CKTokenToString(ckCurrencySymbol),
     BTC: () => "BTC",
     ICP: () => "ICP",

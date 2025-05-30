@@ -1,7 +1,7 @@
-import { Principal } from "@dfinity/principal";
-
-import { CurrencyReceiver, CurrencyType } from "./currency";
+import { CurrencyType } from "./currency";
 import { CurrencyMeta } from "./meta";
+
+export type CurrencyManagerMap = Record<string, CurrencyManager>;
 
 export type CurrencyManager = {
   // wallet?: {

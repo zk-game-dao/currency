@@ -4,7 +4,7 @@ import { IsDev, UserError } from '@zk-game-dao/ui';
 import { AuthData } from '../auth';
 import { CurrencyReceiver, CurrencyType } from '../types/currency';
 import { DateToBigNanoseconds } from './time';
-import { getLedgerCanisterID } from '../types/manager-map';
+import { getLedgerCanisterID } from './manager';
 
 export const fetchAllowance = async (
   currencyType: CurrencyType,

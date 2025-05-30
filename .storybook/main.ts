@@ -1,4 +1,5 @@
 import type { StorybookConfig } from "@storybook/react-vite";
+import { defineConfig } from "vite";
 
 const config: StorybookConfig = {
   stories: ["../ui/**/*.mdx", "../ui/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
@@ -14,6 +15,7 @@ const config: StorybookConfig = {
       config?.NODE_ENV || process === undefined
         ? process.env.NODE_ENV || "development"
         : "development",
+    VITE_IC_HOST: "https://ic0.app",
   }),
 
   staticDirs: ["../node_modules/@zk-game-dao/ui/assets"],
