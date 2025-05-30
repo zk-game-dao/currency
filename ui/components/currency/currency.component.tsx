@@ -26,7 +26,7 @@ const CountDecimals = (value: number) => {
   return value.toString().split(".")[1]?.length || 0;
 };
 
-export const CurrencyComponentInner = memo<CurrencyComponentInnerProps & Pick<CurrencyMeta, 'decimals' | 'symbol' | 'icon' | "renderedDecimalPlaces">>(
+export const CurrencyComponentInner = memo<CurrencyComponentInnerProps & Pick<CurrencyMeta, 'decimals' | 'symbol' | 'isFetched' | 'icon' | "renderedDecimalPlaces">>(
   ({
     hideSymbol: hideToken,
     size = "medium",

@@ -22,7 +22,8 @@ import { getLedgerCanisterID } from "./get-ledger-canister-id";
 /** All the static metadata info that can be extracted */
 export const getStaticManagerMetadata = (
   currency: Currency,
-  metadata?: IcrcTokenMetadata
+  metadata?: IcrcTokenMetadata,
+  isFetched: boolean = false
 ): CurrencyMeta =>
   matchRustEnum(currency)({
     ICP: (): CurrencyMeta => ({
@@ -33,6 +34,7 @@ export const getStaticManagerMetadata = (
       renderedDecimalPlaces: 4,
       icon: ICPToken,
       symbol: "ICP",
+      isFetched,
     }),
     GenericICRC1: (token): CurrencyMeta => ({
       metadata,
@@ -41,6 +43,7 @@ export const getStaticManagerMetadata = (
       transactionFee: metadata?.fee ?? 10_000n,
       icon: metadata?.icon,
       symbol: decodeSymbolFrom8Bytes(token.symbol),
+      isFetched,
     }),
     CKETHToken: (ckTokenSymbol) =>
       matchRustEnum(ckTokenSymbol)({
@@ -52,6 +55,7 @@ export const getStaticManagerMetadata = (
           metadata,
           icon: ETHToken,
           symbol: "ETH",
+          isFetched,
         }),
         USDC: () => ({
           decimals: metadata?.decimals ?? 6,
@@ -61,6 +65,7 @@ export const getStaticManagerMetadata = (
           metadata,
           icon: USDCToken,
           symbol: "USDC",
+          isFetched,
         }),
         USDT: () => ({
           decimals: metadata?.decimals ?? 6,
@@ -70,6 +75,7 @@ export const getStaticManagerMetadata = (
           metadata,
           icon: USDTToken,
           symbol: "USDT",
+          isFetched,
         }),
       }),
     BTC: (): CurrencyMeta => ({
@@ -80,6 +86,7 @@ export const getStaticManagerMetadata = (
       metadata: undefined,
       icon: BTCToken,
       symbol: "BTC",
+      isFetched,
       alternatives: {
         satoshis: {
           decimals: 0,
@@ -88,6 +95,7 @@ export const getStaticManagerMetadata = (
           metadata: undefined,
           icon: SatoshisToken,
           symbol: "sats",
+          isFetched,
         },
       },
     }),
@@ -133,6 +141,7 @@ export const buildICPManager = async (
       transactionFee: 10_000n,
       metadata,
       icon: ICPToken,
+      isFetched: true,
       symbol: "ICP",
     },
   };
@@ -160,6 +169,8 @@ export const buildFakeCurrencyManager = (isBTC: boolean): CurrencyManager => ({
     transactionFee: 10_000n,
     icon: isBTC ? FakePP : FakeZKP,
     symbol: "IN-GAME",
+    // We don't fetch metadata for in game currencies
+    isFetched: true,
   },
 });
 

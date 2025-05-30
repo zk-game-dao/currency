@@ -28,8 +28,12 @@ export const getManagerMetadata = async (
   if (!metadata)
     throw new Error(`Metadata not found for ${CurrencyToString(currency)}`);
 
-  return getStaticManagerMetadata(currency, {
-    ...metadata,
-    fee: (await ledger.transactionFee({})) ?? metadata.fee,
-  });
+  return getStaticManagerMetadata(
+    currency,
+    {
+      ...metadata,
+      fee: (await ledger.transactionFee({})) ?? metadata.fee,
+    },
+    true
+  );
 };
