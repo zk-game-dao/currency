@@ -12,7 +12,7 @@ import { Queries } from "../queries";
 import { CurrencyToString } from "../utils/currency-type-to-string";
 import { CKTokenSymbol, Currency } from "./currency";
 import { EIP6963ProviderDetail, useEIP6963 } from "./EIP6963.context";
-import { buildCKTokenManager } from "./manager-map";
+import { buildCKTokenManager } from "../utils/manager/manager-map";
 
 export const USDC_MINTER_CANISTER_ID = "sv3dd-oaaaa-aaaar-qacoa-cai";
 export const USDC_LEDGER_CANISTER_ID = "xevnm-gaaaa-aaaar-qafnq-cai";

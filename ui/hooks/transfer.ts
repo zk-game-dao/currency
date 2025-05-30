@@ -3,7 +3,7 @@ import { useMutation, UserError } from "@zk-game-dao/ui";
 import { useAuth } from "../auth/types/context";
 import { Queries } from "../queries";
 import { Currency, CurrencyReceiver } from "../types/currency";
-import { buildCurrencyManager } from "../types/manager-map";
+import { buildCurrencyManager } from "../utils/manager/manager-map";
 import { CurrencyToString } from "../utils/currency-type-to-string";
 import { TokenAmountToString } from "../utils/token-amount-conversion";
 import { transferTo } from "../utils/transfer";

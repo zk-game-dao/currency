@@ -10,7 +10,7 @@ import {
   buildFakeCurrencyManager,
   getManagerMetadata,
   getStaticManagerMetadata,
-} from "../types/manager-map";
+} from "../utils/manager";
 import { CurrencyTypeToString } from "../utils";
 import { CurrencyTypeSerializer } from "../utils/serialize";
 import { useIsBTC } from "../context";
@@ -67,9 +67,10 @@ export const useCurrencyManagerMeta = (
       if ("Fake" in currencyType) return buildFakeCurrencyManager(isBTC).meta;
       return await getManagerMetadata(currencyType.Real);
     },
+    throwOnError: true,
     initialData: matchRustEnum(currencyType)({
       Fake: () => buildFakeCurrencyManager(isBTC).meta,
       Real: (currency) => getStaticManagerMetadata(currency),
-    })
+    }),
   }).data;
 };
