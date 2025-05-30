@@ -19,6 +19,7 @@ const MockToken = (
   meta: {
     icon: string;
     symbol: string;
+    isFetched: true;
   };
 } => ({
   currencyType: {
@@ -35,6 +36,7 @@ const MockToken = (
       icon ||
       `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAABl0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uIDIuMS4wLCBodHRwOi8vbWF0cGxvdGxpYi5vcmcvpW3flAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxMi0wNy0yOVQxNzozMDozNiswMjowMLX7aYkAAAAASUVORK5CYII=`,
     symbol,
+    isFetched: true,
   },
 });
 
