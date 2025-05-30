@@ -38,11 +38,11 @@ export const getStaticManagerMetadata = (
     }),
     GenericICRC1: (token): CurrencyMeta => ({
       metadata,
-      decimals: token.decimals,
-      thousands: 10 ** token.decimals,
+      decimals: metadata?.decimals ?? token.decimals,
+      thousands: 10 ** (metadata?.decimals ?? token.decimals),
       transactionFee: metadata?.fee ?? 10_000n,
       icon: metadata?.icon,
-      symbol: decodeSymbolFrom8Bytes(token.symbol),
+      symbol: metadata?.symbol ?? decodeSymbolFrom8Bytes(token.symbol),
       isFetched,
     }),
     CKETHToken: (ckTokenSymbol) =>

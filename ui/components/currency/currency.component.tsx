@@ -122,7 +122,10 @@ export const CurrencyComponentInner = memo<CurrencyComponentInnerProps & Pick<Cu
     prevProps.currencyValue === nextProps.currencyValue &&
     IsSameCurrencyType(prevProps.currencyType, nextProps.currencyType) &&
     prevProps.decimals === nextProps.decimals &&
-    prevProps.renderedDecimalPlaces === nextProps.renderedDecimalPlaces
+    prevProps.renderedDecimalPlaces === nextProps.renderedDecimalPlaces &&
+    prevProps.symbol === nextProps.symbol &&
+    prevProps.isFetched === nextProps.isFetched &&
+    prevProps.icon === nextProps.icon
   )
 );
 

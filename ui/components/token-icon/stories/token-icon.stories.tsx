@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { DCD_MOCK, NFID_MOCK } from '../../../../.storybook/__mocks__/tokens';
+import { DCD_MOCK, NFID_MOCK, YUKU_MOCK } from '../../../../.storybook/__mocks__/tokens';
 import { CurrencyMetaIconComponent } from '../token-icon.component';
 
 const meta: Meta<typeof CurrencyMetaIconComponent> = {
@@ -23,5 +23,11 @@ export const DCD: Story = {
 export const NFID: Story = {
   args: {
     meta: NFID_MOCK.meta
+  }
+};
+
+export const YUKU: Story = {
+  args: {
+    meta: YUKU_MOCK.meta
   }
 };

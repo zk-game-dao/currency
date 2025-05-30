@@ -67,6 +67,7 @@ export const useCurrencyManagerMeta = (
       if ("Fake" in currencyType) return buildFakeCurrencyManager(isBTC).meta;
       return await getManagerMetadata(currencyType.Real);
     },
+    throwOnError: true,
     initialData: matchRustEnum(currencyType)({
       Fake: () => buildFakeCurrencyManager(isBTC).meta,
       Real: (currency) => getStaticManagerMetadata(currency),

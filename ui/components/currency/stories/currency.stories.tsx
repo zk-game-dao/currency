@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import {
+  DCD_MOCK, MOCK_UNKNOWN, NFID_MOCK, YUKU_MOCK
+} from '../../../../.storybook/__mocks__/tokens';
 import { CurrencyComponent } from '../currency.component';
-import { DCD_MOCK, MOCK_UNKNOWN, NFID_MOCK } from '../../../../.storybook/__mocks__/tokens';
 
 const meta: Meta<typeof CurrencyComponent> = {
   title: 'UI/Currency',
@@ -46,4 +48,5 @@ export const USDT: Story = { args: { currencyType: { Real: { CKETHToken: { USDT:
 export const USDC: Story = { args: { currencyType: { Real: { CKETHToken: { USDC: null } } } } };
 export const DCD: Story = { args: { currencyType: DCD_MOCK.currencyType } };
 export const NFID: Story = { args: { currencyType: NFID_MOCK.currencyType } };
+export const YUKU: Story = { args: { currencyType: YUKU_MOCK.currencyType } };
 export const Unknown: Story = { args: { currencyType: MOCK_UNKNOWN.currencyType } };
