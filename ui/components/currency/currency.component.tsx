@@ -88,7 +88,11 @@ export const CurrencyComponentInner = memo<CurrencyComponentInnerProps & Pick<Cu
         className={classNames(
           className,
           forceFlex ? 'flex' : 'inline-flex',
-          "justify-center items-center shrink-0 gap-1",
+          "justify-center items-center shrink-0",
+          {
+            'gap-1': size === "small",
+            'gap-2': size === "medium" || size === "big"
+          },
           reverse ? "flex-row-reverse" : "flex-row",
         )}
       >

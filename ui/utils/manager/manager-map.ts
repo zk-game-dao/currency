@@ -4,10 +4,6 @@ import { IcrcTokenMetadata, mapTokenMetadata } from "@dfinity/ledger-icrc";
 import { IsDev, matchRustEnum } from "@zk-game-dao/ui";
 
 import { useIsBTC } from "../../context";
-import { CKTokenSymbol, Currency, CurrencyType } from "../../types/currency";
-import { CurrencyManager } from "../../types/manager";
-import { CurrencyMeta } from "../../types/meta";
-import { decodeSymbolFrom8Bytes } from "../encode-symbol";
 import BTCToken from "../../icons/tokens/bitcoin-symbol.svg";
 import ETHToken from "../../icons/tokens/eth.svg";
 import FakePP from "../../icons/tokens/fake-pp.png";
@@ -16,8 +12,13 @@ import ICPToken from "../../icons/tokens/icp.svg";
 import SatoshisToken from "../../icons/tokens/satoshi.svg";
 import USDTToken from "../../icons/tokens/tether.svg";
 import USDCToken from "../../icons/tokens/usdc.svg";
+import { CKTokenSymbol, Currency, CurrencyType } from "../../types/currency";
+import { CurrencyManager } from "../../types/manager";
+import { CurrencyMeta } from "../../types/meta";
+import { decodeSymbolFrom8Bytes } from "../encode-symbol";
 import { getManagerMetadata } from "./get-icrc-manager-metadata";
 import { getLedgerCanisterID } from "./get-ledger-canister-id";
+import { TOKEN_ICONS } from "./token-icons";
 
 /** All the static metadata info that can be extracted */
 export const getStaticManagerMetadata = (
@@ -36,15 +37,22 @@ export const getStaticManagerMetadata = (
       symbol: "ICP",
       isFetched,
     }),
-    GenericICRC1: (token): CurrencyMeta => ({
-      metadata,
-      decimals: metadata?.decimals ?? token.decimals,
-      thousands: 10 ** (metadata?.decimals ?? token.decimals),
-      transactionFee: metadata?.fee ?? 10_000n,
-      icon: metadata?.icon,
-      symbol: metadata?.symbol ?? decodeSymbolFrom8Bytes(token.symbol),
-      isFetched,
-    }),
+    GenericICRC1: (token): CurrencyMeta => {
+      const symbol = metadata?.symbol ?? decodeSymbolFrom8Bytes(token.symbol);
+      const icon =
+        (symbol in TOKEN_ICONS
+          ? TOKEN_ICONS[symbol as keyof typeof TOKEN_ICONS]
+          : undefined) ?? metadata?.icon;
+      return {
+        metadata,
+        decimals: metadata?.decimals ?? token.decimals,
+        thousands: 10 ** (metadata?.decimals ?? token.decimals),
+        transactionFee: metadata?.fee ?? 10_000n,
+        icon,
+        symbol,
+        isFetched,
+      };
+    },
     CKETHToken: (ckTokenSymbol) =>
       matchRustEnum(ckTokenSymbol)({
         ETH: () => ({
