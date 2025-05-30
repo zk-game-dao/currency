@@ -9,8 +9,6 @@ import { CurrencyToString } from "../currency-type-to-string";
 import { getLedgerCanisterID } from "./get-ledger-canister-id";
 import { getStaticManagerMetadata } from "./manager-map";
 
-/** The string value is the serialized string of the currency type */
-
 export const getManagerMetadata = async (
   currency: Currency,
   agent = HttpAgent.createSync({
