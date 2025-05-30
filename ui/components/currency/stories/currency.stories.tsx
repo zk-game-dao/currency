@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { CurrencyComponent } from '../currency.component';
+import { DCD_MOCK, MOCK_UNKNOWN, NFID_MOCK } from '../../../../.storybook/__mocks__/tokens';
 
 const meta: Meta<typeof CurrencyComponent> = {
   title: 'UI/Currency',
@@ -43,3 +44,6 @@ export const BTC: Story = {
 export const ETH: Story = { args: { currencyType: { Real: { CKETHToken: { ETH: null } } }, currencyValue: 1000000000000n, } };
 export const USDT: Story = { args: { currencyType: { Real: { CKETHToken: { USDT: null } } } } };
 export const USDC: Story = { args: { currencyType: { Real: { CKETHToken: { USDC: null } } } } };
+export const DCD: Story = { args: { currencyType: DCD_MOCK.currencyType } };
+export const NFID: Story = { args: { currencyType: NFID_MOCK.currencyType } };
+export const Unknown: Story = { args: { currencyType: MOCK_UNKNOWN.currencyType } };

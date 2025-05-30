@@ -1,51 +1,23 @@
 import { HttpAgent } from "@dfinity/agent";
-import { AccountIdentifier, LedgerCanister } from "@dfinity/ledger-icp";
-import {
-  IcrcLedgerCanister,
-  IcrcTokenMetadata,
-  mapTokenMetadata,
-} from "@dfinity/ledger-icrc";
-import { Principal } from "@dfinity/principal";
+import { LedgerCanister } from "@dfinity/ledger-icp";
+import { IcrcTokenMetadata, mapTokenMetadata } from "@dfinity/ledger-icrc";
 import { IsDev, matchRustEnum } from "@zk-game-dao/ui";
-import BTCToken from "../icons/tokens/bitcoin-symbol.svg";
-import SatoshisToken from "../icons/tokens/satoshi.svg";
-import ETHToken from "../icons/tokens/eth.svg";
-import ICPToken from "../icons/tokens/icp.svg";
-import USDTToken from "../icons/tokens/tether.svg";
-import USDCToken from "../icons/tokens/usdc.svg";
-import FakePP from "../icons/tokens/fake-pp.png";
-import FakeZKP from "../icons/tokens/fake-zkp.png";
 
-import { host } from "../auth";
-import { CurrencyToString } from "../utils/currency-type-to-string";
-import { BTC_LEDGER_CANISTER_ID } from "./chain-fusion.context";
-import { CKTokenSymbol, Currency, CurrencyType } from "./currency";
-import { CurrencyManager } from "./manager";
-import { CurrencyMeta } from "./meta";
-import { useIsBTC } from "../context";
-import { decodeSymbolFrom8Bytes } from "../utils/encode-symbol";
-
-/** The string value is the serialized string of the currency type */
-export type CurrencyManagerMap = Record<string, CurrencyManager>;
-
-export const getCKTokenLedgerCanisterID = (
-  ckTokenSymbol: CKTokenSymbol
-): Principal =>
-  Principal.fromText(
-    matchRustEnum(ckTokenSymbol)({
-      ETH: () => "ss2fx-dyaaa-aaaar-qacoq-cai",
-      USDC: () => "xevnm-gaaaa-aaaar-qafnq-cai",
-      USDT: () => "cngnf-vqaaa-aaaar-qag4q-cai",
-    })
-  );
-
-export const getLedgerCanisterID = (currency: Currency): Principal =>
-  matchRustEnum(currency)({
-    ICP: () => Principal.fromText("ryjl3-tyaaa-aaaaa-aaaba-cai"),
-    GenericICRC1: (token) => token.ledger_id,
-    CKETHToken: (ckTokenSymbol) => getCKTokenLedgerCanisterID(ckTokenSymbol),
-    BTC: () => Principal.fromText(BTC_LEDGER_CANISTER_ID),
-  });
+import { useIsBTC } from "../../context";
+import { CKTokenSymbol, Currency, CurrencyType } from "../../types/currency";
+import { CurrencyManager } from "../../types/manager";
+import { CurrencyMeta } from "../../types/meta";
+import { decodeSymbolFrom8Bytes } from "../encode-symbol";
+import BTCToken from "../../icons/tokens/bitcoin-symbol.svg";
+import ETHToken from "../../icons/tokens/eth.svg";
+import FakePP from "../../icons/tokens/fake-pp.png";
+import FakeZKP from "../../icons/tokens/fake-zkp.png";
+import ICPToken from "../../icons/tokens/icp.svg";
+import SatoshisToken from "../../icons/tokens/satoshi.svg";
+import USDTToken from "../../icons/tokens/tether.svg";
+import USDCToken from "../../icons/tokens/usdc.svg";
+import { getManagerMetadata } from "./get-icrc-manager-metadata";
+import { getLedgerCanisterID } from "./get-ledger-canister-id";
 
 /** All the static metadata info that can be extracted */
 export const getStaticManagerMetadata = (
@@ -120,31 +92,6 @@ export const getStaticManagerMetadata = (
       },
     }),
   });
-
-export const getManagerMetadata = async (
-  currency: Currency,
-  agent = HttpAgent.createSync({
-    host,
-  })
-): Promise<CurrencyMeta> => {
-  if (IsDev) await agent.fetchRootKey();
-
-  const ledger = IcrcLedgerCanister.create({
-    agent,
-    canisterId: getLedgerCanisterID(currency),
-  });
-
-  const meta = await ledger.metadata({});
-  const metadata = mapTokenMetadata(meta);
-
-  if (!metadata)
-    throw new Error(`Metadata not found for ${CurrencyToString(currency)}`);
-
-  return getStaticManagerMetadata(currency, {
-    ...metadata,
-    fee: (await ledger.transactionFee({})) ?? metadata.fee,
-  });
-};
 
 export const buildICRC1CurrencyManager = async (
   agent: HttpAgent,
