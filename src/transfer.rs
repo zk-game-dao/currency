@@ -13,7 +13,7 @@ pub async fn transfer_icp(
 ) -> Result<(), CurrencyError> {
     let transfer_result = ic_ledger_types::transfer(
         MAINNET_LEDGER_CANISTER_ID,
-        &ic_ledger_types::TransferArgs {
+        ic_ledger_types::TransferArgs {
             memo: ic_ledger_types::Memo(0), // Use an appropriate memo
             amount: ic_ledger_types::Tokens::from_e8s(amount - ic_ledger_types::DEFAULT_FEE.e8s()),
             fee: ic_ledger_types::DEFAULT_FEE,
