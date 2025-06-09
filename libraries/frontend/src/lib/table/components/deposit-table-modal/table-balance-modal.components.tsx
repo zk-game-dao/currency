@@ -78,7 +78,7 @@ export const TableBalanceModalComponent = memo<{
     normalizeParams: async () => {
       if (!tableUser || !authData) throw "User or table user not found";
       return [
-        tableUser.users_canister_id,
+        // tableUser.users_canister_id,
         authData.principal,
         amount,
       ];
