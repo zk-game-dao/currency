@@ -95,8 +95,13 @@ export const ProvideWalletModalContext = memo<PropsWithChildren<ModalProps & { c
         case "external":
           if (!web3WithdrawExternalWalletAddress)
             throw new UserError("No external wallet address value found");
-          if (web3WithdrawExternalWalletAddress.indexOf('-') === -1)
+          if (web3WithdrawExternalWalletAddress.indexOf('-') === -1) {
+            if (!('ICP' in currency))
+              throw new UserError(
+                "External wallet address must be a principal for ICRC transfers",
+              );
             accountIdentifier = AccountIdentifier.fromHex(web3WithdrawExternalWalletAddress);
+          }
           else
             principal = Principal.fromText(web3WithdrawExternalWalletAddress);
           break;
