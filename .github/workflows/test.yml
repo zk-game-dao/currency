@@ -24,3 +24,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - run: pnpm run build
+      - run: pnpm publish --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
