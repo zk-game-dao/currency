@@ -29,8 +29,10 @@
     "@zk-game-dao/ui": "^0.2.13",
     "bitcoinjs-lib": "^6.1.7",
     "ic-siwb-lasereyes-connector": "^0.1.9",
-    "ic-siwe-js": "^0.2.4",
     "wagmi": "^2.15.6"
+  },
+  "dependencies": {
+    "ic-siwe-js": "^0.2.4"
   },
   "devDependencies": {
     "@analytics/google-analytics": "^1.0.7",
@@ -100,7 +102,6 @@
     "framer-motion": "^12.4.2",
     "glob": "^11.0.1",
     "ic-siwb-lasereyes-connector": "^0.1.9",
-    "ic-siwe-js": "^0.2.4",
     "ic-stoic-identity": "^2.0.0",
     "jest": "^29.7.0",
     "jest-mock": "^29.7.0",
