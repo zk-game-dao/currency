@@ -38,7 +38,6 @@ export type SocialLoginProviderKey = (typeof SocialLoginProviders)[number];
 
 export type Web3AuthLoginProvider =
   | { type: SocialLoginProviderKey }
-  | { type: "siwe" }
   | {
       type: "email_passwordless";
       email: string;

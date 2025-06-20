@@ -1,5 +1,6 @@
 import { Buffer } from 'buffer';
 import { useSiwbIdentity } from 'ic-siwb-lasereyes-connector';
+import { useSiwe } from 'ic-siwe-js/react';
 import { memo, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
 import { HttpAgent } from '@dfinity/agent';
@@ -22,6 +23,7 @@ export const ProvideAuthClient = memo<PropsWithChildren>(({ children }) => {
     useState<Providers>({});
 
   const siwb = useSiwbIdentity();
+  const siwe = useSiwe();
   const laserEyes = useLaserEyes();
 
   const [showLoginModal, setShowLoginModal] = useState<{ onSuccess: (data: AuthData) => void; onError: (error: Error) => void }>();
@@ -57,6 +59,24 @@ export const ProvideAuthClient = memo<PropsWithChildren>(({ children }) => {
       internetIdentityProvider,
     }),
     queryFn: async (): Promise<AuthData | null> => {
+
+      if (siwe.identity && siwe.identity.getDelegation().delegations.every(v => v.delegation.expiration > DateToBigIntTimestamp(new Date()))) {
+        const agent = HttpAgent.createSync({ identity: siwe.identity, host: host });
+        // Fetch root key only in development to bypass certificate validation
+        if (IsDev) await agent.fetchRootKey();
+
+        return {
+          type: "siwe",
+          provider: { type: 'siwe' },
+          agent,
+          identity: siwe.identity,
+          principal: siwe.identity.getPrincipal(),
+          accountIdentifier: AccountIdentifier.fromPrincipal({
+            principal: siwe.identity.getPrincipal(),
+          }),
+        };
+      }
+
       if (siwb.identity && siwb.identity.getDelegation().delegations.every(v => v.delegation.expiration > DateToBigIntTimestamp(new Date()))) {
 
         const agent = HttpAgent.createSync({ identity: siwb.identity, host: host });
