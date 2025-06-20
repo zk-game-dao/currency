@@ -9,14 +9,17 @@ const config: StorybookConfig = {
     "@chromatic-com/storybook",
     "@storybook/experimental-addon-test",
   ],
-  env: (config) => ({
-    ...config,
-    NODE_ENV:
-      config?.NODE_ENV || process === undefined
-        ? process.env.NODE_ENV || "development"
-        : "development",
-    VITE_IC_HOST: "https://ic0.app",
-  }),
+  env: (config) => {
+    console.log(config);
+    return {
+      ...config,
+      NODE_ENV:
+        config?.NODE_ENV || process === undefined
+          ? process.env.NODE_ENV || "development"
+          : "development",
+      VITE_IC_HOST: "https://ic0.app",
+    };
+  },
 
   staticDirs: ["../node_modules/@zk-game-dao/ui/assets"],
   framework: {

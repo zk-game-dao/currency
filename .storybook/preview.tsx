@@ -22,6 +22,9 @@ import { ProvideTokenRegistry } from '../ui/context/token-registry.context';
 import { CurrencyNetwork } from '../ui/types/currency-config.context';
 
 import type { Preview } from "@storybook/react";
+import { ProvideSiweLogins } from '../ui/auth/components/provide-eth-logins/provide-eth-logins.component';
+
+const siweProviderCanisterId = Principal.fromText("ll5dv-z7777-77777-aaaca-cai"!);
 
 BigInt.prototype.toJSON = function () {
   return JSON.rawJSON(this.toString());
@@ -213,11 +216,13 @@ const preview: Preview = {
                     >
                       <ProvideTokenRegistry>
                         <ProvideSiwbLogins siwbProviderCanisterId={Principal.fromText('j2let-saaaa-aaaam-qds2q-cai')}>
-                          <PreviewAuth authContext={authContextValue} >
-                            <EI6963Provider >
-                              <Story />
-                            </EI6963Provider>
-                          </PreviewAuth>
+                          <ProvideSiweLogins siweProviderCanisterId={siweProviderCanisterId}>
+                            <PreviewAuth authContext={authContextValue} >
+                              <EI6963Provider >
+                                <Story />
+                              </EI6963Provider>
+                            </PreviewAuth>
+                          </ProvideSiweLogins>
                         </ProvideSiwbLogins>
                       </ProvideTokenRegistry>
                     </ProvideCurrencyConfig >
