@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "dev": "npm run storybook",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -25,23 +26,27 @@
     "@web3auth/base": "^9.5.4",
     "@web3auth/base-provider": "^9.5.4",
     "@web3auth/no-modal": "^9.5.4",
-    "@zk-game-dao/ui": "^0.2.10",
+    "@zk-game-dao/ui": "^0.2.13",
     "bitcoinjs-lib": "^6.1.7",
-    "ic-siwb-lasereyes-connector": "^0.1.9"
+    "ic-siwb-lasereyes-connector": "^0.1.9",
+    "wagmi": "^2.15.6"
+  },
+  "dependencies": {
+    "ic-siwe-js": "^0.2.4"
   },
   "devDependencies": {
     "@analytics/google-analytics": "^1.0.7",
     "@analytics/google-tag-manager": "^0.5.5",
     "@chromatic-com/storybook": "^3.2.6",
-    "@dfinity/agent": "^2.3.0",
-    "@dfinity/auth-client": "^2.2.0",
-    "@dfinity/candid": "^2.3.0",
-    "@dfinity/ckbtc": "^3.1.10",
-    "@dfinity/cketh": "^3.4.4",
-    "@dfinity/identity": "^2.2.0",
-    "@dfinity/ledger-icp": "^2.6.8",
-    "@dfinity/ledger-icrc": "^2.7.3",
-    "@dfinity/principal": "^2.3.0",
+    "@dfinity/agent": "^2.4.1",
+    "@dfinity/auth-client": "^2.4.1",
+    "@dfinity/candid": "^2.4.1",
+    "@dfinity/ckbtc": "^3.1.12",
+    "@dfinity/cketh": "^3.4.9",
+    "@dfinity/identity": "^2.4.1",
+    "@dfinity/ledger-icp": "^2.6.13",
+    "@dfinity/ledger-icrc": "^2.8.1",
+    "@dfinity/principal": "^2.4.1",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@eslint/js": "^9.15.0",
     "@jest/globals": "^29.7.0",
@@ -78,7 +83,7 @@
     "@web3auth/base": "^9.5.4",
     "@web3auth/base-provider": "^9.5.4",
     "@web3auth/no-modal": "^9.5.4",
-    "@zk-game-dao/ui": "^0.2.10",
+    "@zk-game-dao/ui": "^0.2.13",
     "analytics": "^0.8.14",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.9",
@@ -129,7 +134,8 @@
     "vite-plugin-node-polyfills": "^0.23.0",
     "vite-plugin-pwa": "^0.21.1",
     "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^3.0.9"
+    "vitest": "^3.0.9",
+    "wagmi": "^2.15.6"
   },
   "files": [
     "dist"

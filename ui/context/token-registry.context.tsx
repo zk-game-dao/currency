@@ -7,7 +7,8 @@ import { useMemo } from 'react';
 import { Currency, Token } from '../types';
 import { encodeSymbolTo8Bytes } from '../utils';
 import { CurrencySerializer } from '../utils/serialize';
-import { useEnabledNetworks, useIsBTC } from './currency-config.context';
+import { useIsBTC } from './currency-config.context';
+import { IcrcLedgerCanister, mapTokenMetadata } from '@dfinity/ledger-icrc';
 
 type SNSApiResponse<D> = {
   data: D[];
@@ -85,6 +86,27 @@ const storeHighlightedCurrencies = (currencies: Currency[]) => {
 export const useSearchCurrencies = (query?: string) => useQuery({
   queryKey: ["token-registry", "icrc", query ?? 'none'],
   queryFn: async () => {
+    try {
+      const principal = Principal.fromText(query ?? '');
+
+      const ledger = IcrcLedgerCanister.create({ canisterId: principal, });
+      const meta = await ledger.metadata({});
+      const metadata = mapTokenMetadata(meta);
+
+      if (!metadata?.symbol) throw new Error(`Metadata not found for ${query}`);
+
+      return [
+        {
+          GenericICRC1: {
+            ledger_id: principal,
+            symbol: encodeSymbolTo8Bytes(metadata.symbol),
+            decimals: metadata.decimals,
+          } as Token,
+        },
+      ]
+    } catch (e) {
+      // If the query is not a valid Principal, we assume it's a search term
+    }
     const {
       data: { data: l },
     } = await axios.get<ICRCLedgersResponse>(query ? `${ledgers_endpoint}&query=${encodeURIComponent(query)}` : ledgers_endpoint);

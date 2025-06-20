@@ -1,9 +1,15 @@
-import { ErrorComponent, FormComponent, Image, Interactable, List, Modal, TitleTextComponent } from '@zk-game-dao/ui';
 import { memo, useMemo, useState } from 'react';
 
+import {
+  ErrorComponent, FormComponent, Image, Interactable, List, Modal, TitleTextComponent
+} from '@zk-game-dao/ui';
+
 import { NetworkGuardComponent } from '../../../components/network-guard/network-guard.component';
-import { Web3AuthLoginProvider, SocialLoginProviders, useAuth } from '../../types';
-import { LoginProviderListItemComponent } from '../login-provider/login-provider-list-item.component';
+import { SocialLoginProviders, useAuth, Web3AuthLoginProvider } from '../../types';
+import {
+  LoginProviderListItemComponent
+} from '../login-provider/login-provider-list-item.component';
+import { SIWELogins } from './siwe-logins.component';
 import { SWIBLogins } from './swib-logins.component';
 
 const SocialsComponent = memo<{
@@ -75,6 +81,16 @@ export const SignupModalComponent = memo<{ onClose(): void }>(({ onClose }) => {
 
       <NetworkGuardComponent network="btc">
         <SWIBLogins />
+      </NetworkGuardComponent>
+
+      <NetworkGuardComponent network="eth">
+        <SIWELogins
+        // onClose={onClose}
+        // isLoggingIn={!!isLoggingIn}
+        // loginFactory={loginFactory}
+        />
+
+        <ErrorComponent error={error} className="mb-4" />
       </NetworkGuardComponent>
 
       <NetworkGuardComponent network="ic">

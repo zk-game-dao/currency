@@ -9,6 +9,14 @@
     }
   },
   "canisters": {
+    "ic_siwe_provider": {
+      "candid": "https://github.com/kristoferlund/ic-siwe/releases/download/v0.1.1/ic_siwe_provider.did",
+      "declarations": {
+        "output": "declarations/ic_siwe_provider"
+      },
+      "type": "custom",
+      "wasm": "https://github.com/kristoferlund/ic-siwe/releases/download/v0.1.1/ic_siwe_provider.wasm.gz"
+    },
     "ckbtc_minter": {
       "type": "custom",
       "candid": "target/ic/ckbtc_minter.did",

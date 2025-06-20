@@ -354,23 +354,25 @@ export const buildChainFusionActor = (
     const data = getERC20CanisterData(currency.CKETHToken);
     if (!data) throw new UserError(`${currency} is not supported yet`);
 
+    const minterPrincipal = data.minter;
     const minterCanister = CkETHMinterCanister.create({
       agent: authData.agent,
       canisterId: data.minter,
     });
 
+    const ledgerPrincipal = data.ledger;
     const ledgerCanister = IcrcLedgerCanister.create({
       agent: authData.agent,
       canisterId: data.ledger,
     });
 
     const spender: Account = {
-      owner: minterCanister.canisterId,
+      owner: minterPrincipal,
       subaccount: [],
     };
 
     const account: Account = {
-      owner: minterCanister.canisterId,
+      owner: minterPrincipal,
       subaccount: [],
     };
 
@@ -429,7 +431,7 @@ export const buildChainFusionActor = (
             );
           await requireAllowance(amount + fees.ckETHToETH);
           // await ledgerCanister.approve({
-          //   spender: { owner: minterCanister.canisterId, subaccount: [] },
+          //   spender: { owner: minterPrincipal, subaccount: [] },
           //   amount: amount + fees.ckETHToETH,
           // });
           return minterCanister.withdrawEth({
@@ -505,7 +507,7 @@ export const buildChainFusionActor = (
         return minterCanister.withdrawErc20({
           address: selectedAccount,
           amount,
-          ledgerCanisterId: ledgerCanister.canisterId,
+          ledgerCanisterId: ledgerPrincipal,
         });
       },
       deposit: async (amount) => {

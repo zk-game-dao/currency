@@ -1,4 +1,4 @@
-import { List, ListItem, Modal, ModalTitlePortal, SwitchInputComponent, TextInputComponent } from '@zk-game-dao/ui';
+import { List, ListItem, LoadingAnimationComponent, Modal, ModalTitlePortal, SwitchInputComponent, TextInputComponent } from '@zk-game-dao/ui';
 import { memo, useMemo, useState } from 'react';
 
 import { useSearchCurrencies, useTokenRegistry } from '../../context/token-registry.context';
@@ -17,7 +17,7 @@ export const AddTokenModal = memo<{
   const [search, setSearch] = useState<string>();
   const isBTC = useIsBTC();
 
-  const { data: tokens } = useSearchCurrencies(search);
+  const { data: tokens, isPending, isFetching, ...t } = useSearchCurrencies(search);
 
   const shownTokens = useMemo(() => {
     let all = search ? tokens : ([
@@ -45,6 +45,7 @@ export const AddTokenModal = memo<{
 
   return (
     <Modal
+      key="add-token-modal"
       title="Add a token"
       onClose={onClose}
       open={isOpen}
@@ -53,13 +54,15 @@ export const AddTokenModal = memo<{
 
       <TextInputComponent
         label="Search"
+        placeholder='Search or paste a ledger address'
         onChange={setSearch}
         value={search}
       />
 
-      {shownTokens.length === 0 ? (
-        <p className="text-center text-gray-500">No tokens found</p>
-      ) : (
+      {isFetching && shownTokens.length === 0 && <LoadingAnimationComponent variant="shimmer">Fetching ledgers</LoadingAnimationComponent>}
+
+      {shownTokens.length === 0 && !isFetching && <p className="text-center text-gray-500">No tokens found</p>}
+      {shownTokens.length > 0 && (
         <>
           {onSelect ? (
             <List label="Tokens">

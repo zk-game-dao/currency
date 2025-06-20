@@ -8,6 +8,9 @@ import {
 import {
   ProvideSiwbLogins
 } from '../auth/components/provide-btc-logins/provide-btc-logins.component';
+import {
+  ProvideSiweLogins
+} from '../auth/components/provide-eth-logins/provide-eth-logins.component';
 import { CurrencyNetwork } from '../types';
 import { IC_SIWB_ID } from '../utils/env';
 import { AllowanceManagementProvider } from './allowance.context';
@@ -24,6 +27,7 @@ export const ProvideCurrencyContext = memo<{
   enabledNetworks?: CurrencyNetwork[];
   /** If left empty its going to use the production canister */
   siwbProviderCanisterId?: Principal;
+  siweProviderCanisterId?: Principal;
 }>(({
   children,
   disabledNetworks,
@@ -36,19 +40,21 @@ export const ProvideCurrencyContext = memo<{
   >
     <ProvideTokenRegistry>
       <ProvideSiwbLogins siwbProviderCanisterId={siwbProviderCanisterId}>
-        <ProvideAuthClient>
-          <EI6963Provider>
-            <ProvideManualWalletContext>
-              <ProvideChainFusionContext>
-                <AllowanceManagementProvider>
-                  <ProvideBTC>
-                    {children}
-                  </ProvideBTC>
-                </AllowanceManagementProvider>
-              </ProvideChainFusionContext>
-            </ProvideManualWalletContext>
-          </EI6963Provider>
-        </ProvideAuthClient>
+        <ProvideSiweLogins siweProviderCanisterId={siwbProviderCanisterId}>
+          <ProvideAuthClient>
+            <EI6963Provider>
+              <ProvideManualWalletContext>
+                <ProvideChainFusionContext>
+                  <AllowanceManagementProvider>
+                    <ProvideBTC>
+                      {children}
+                    </ProvideBTC>
+                  </AllowanceManagementProvider>
+                </ProvideChainFusionContext>
+              </ProvideManualWalletContext>
+            </EI6963Provider>
+          </ProvideAuthClient>
+        </ProvideSiweLogins>
       </ProvideSiwbLogins>
     </ProvideTokenRegistry>
   </ProvideCurrencyConfig>

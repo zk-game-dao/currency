@@ -1,10 +1,11 @@
-import { type UseMutationResult } from "@tanstack/react-query/build/legacy/types";
 import { createContext, ReactNode, useContext } from "react";
 
 import { AuthData } from "../../auth/types";
 import { Currency } from "../../types";
 import { CryptoCoinValue } from "../currency/currency.component";
 import { WalletType } from "../wallet-type-label/wallet-type-label.component";
+
+import type { UseMutationResult } from "@tanstack/react-query";
 
 export type ModalProps = {
   onBack(): void;

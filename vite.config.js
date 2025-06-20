@@ -38,6 +38,10 @@ export default defineConfig(({ mode }) => ({
         assetFileNames: "assets/[name][extname]",
         entryFileNames: "[name].js",
 
+        manualChunks: {
+          "ic-siwe-js": ["ic-siwe-js"],
+        },
+
         globals: {
           react: "React",
           "react-dom": "React-dom",
