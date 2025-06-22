@@ -19,11 +19,11 @@ jobs:
       - run: corepack enable
       - run: corepack prepare pnpm@latest --activate
 
-      - run: pnpm install
+      - run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      - run: pnpm run build
-      - run: pnpm publish --dry-run --no-git-checks
+      - run: npm run build
+      - run: npm publish --dry-run --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

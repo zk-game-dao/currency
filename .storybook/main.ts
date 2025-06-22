@@ -10,7 +10,6 @@ const config: StorybookConfig = {
     "@storybook/experimental-addon-test",
   ],
   env: (config) => {
-    console.log(config);
     return {
       ...config,
       NODE_ENV:

@@ -63,6 +63,7 @@ export default defineConfig(({ mode }) => ({
     //   ],
     // },
     exclude: [
+      "storybook",
       "@storybook/builder-vite",
       // "vite-plugin-node-polyfills/shims/buffer",
       // "vite-plugin-node-polyfills/shims/global",

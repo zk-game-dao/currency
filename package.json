@@ -32,6 +32,7 @@
     "wagmi": "^2.15.6"
   },
   "dependencies": {
+    "@dfinity/utils": "^2.13.0",
     "ic-siwe-js": "^0.2.4"
   },
   "devDependencies": {
