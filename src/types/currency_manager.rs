@@ -1,6 +1,7 @@
 use std::borrow::Cow;
 
 use candid::{CandidType, Decode, Encode, Principal};
+use ic_ledger_types::DEFAULT_FEE;
 use ic_stable_structures::{storable::Bound, Storable};
 use serde::{Deserialize, Serialize};
 
@@ -290,6 +291,35 @@ impl CurrencyManager {
                     .find(|w| w.metadata.symbol == token.symbol_to_string())
                     .ok_or(CurrencyError::WalletNotSet)?;
                 wallet.get_balance(principal_id).await
+            }
+        }
+    }
+
+    pub async fn get_fee(&self, currency: &Currency) -> Result<u128, CurrencyError> {
+        match currency {
+            Currency::ICP => match &self.icp {
+                Some(_) => Ok(DEFAULT_FEE.e8s() as u128),
+                None => Err(CurrencyError::WalletNotSet),
+            },
+            Currency::CKETHToken(token) => {
+                let wallet = self
+                    .ckerc20_tokens
+                    .iter()
+                    .find(|w| w.config.token_symbol == Currency::CKETHToken(*token))
+                    .ok_or(CurrencyError::WalletNotSet)?;
+                Ok(wallet.config.fee)
+            }
+            Currency::BTC => match &self.btc {
+                Some(wallet) => Ok(wallet.config.fee),
+                None => Err(CurrencyError::WalletNotSet),
+            },
+            Currency::GenericICRC1(token) => {
+                let wallet = self
+                    .generic_icrc1_tokens
+                    .iter()
+                    .find(|w| w.metadata.symbol == token.symbol_to_string())
+                    .ok_or(CurrencyError::WalletNotSet)?;
+                Ok(wallet.metadata.fee)
             }
         }
     }
