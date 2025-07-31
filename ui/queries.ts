@@ -1,25 +1,33 @@
+import { SiwbIdentityContextType } from "ic-siwb-lasereyes-connector";
+
+import { AuthClient } from "@dfinity/auth-client";
 import { AccountIdentifier } from "@dfinity/ledger-icp";
 import { Principal } from "@dfinity/principal";
+import { LaserEyesContextType } from "@omnisat/lasereyes";
 import { queryKeyFactory } from "@zk-game-dao/ui";
 
 import { CurrencyReceiver, CurrencyType } from "./types";
-import { SiwbIdentityContextType } from "ic-siwb-lasereyes-connector";
-import { LaserEyesContextType } from "@omnisat/lasereyes";
-import { AuthClient } from "@dfinity/auth-client";
+
+import type { SiwsIdentityContextType } from "ic-siws-js/src/context.type";
+import type { Wallet as SolanaWallet } from "@solana/wallet-adapter-react";
 
 export const Queries = {
   auth: queryKeyFactory(
     ({
       siwb,
+      siws,
       laserEyes,
       internetIdentityProvider,
     }: {
       siwb?: SiwbIdentityContextType;
+      siws?: SiwsIdentityContextType;
+      solanaWallet?: SolanaWallet;
       laserEyes?: LaserEyesContextType;
       internetIdentityProvider?: AuthClient;
     }) => [
       "auth",
       siwb?.identity?.getPrincipal() ?? "unknown",
+      siws?.identity?.getPrincipal() ?? "unknown",
       laserEyes?.address,
       laserEyes?.provider,
       internetIdentityProvider?.getIdentity().getPrincipal().toText() ??

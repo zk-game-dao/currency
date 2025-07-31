@@ -1,10 +1,22 @@
-import { ErrorComponent, FormComponent, Image, Interactable, List, Modal, TitleTextComponent } from '@zk-game-dao/ui';
 import { memo, useMemo, useState } from 'react';
 
+import { useWallet, Wallet } from '@solana/wallet-adapter-react';
+import { WalletIcon } from '@solana/wallet-adapter-react-ui';
+import { useSiws } from "ic-siws-js/react";
+import {
+  ButtonComponent,
+  ErrorComponent, FormComponent, Image, Interactable, List, ListItem, LoadingAnimationComponent, Modal, TitleTextComponent,
+  useMutation
+} from '@zk-game-dao/ui';
+
 import { NetworkGuardComponent } from '../../../components/network-guard/network-guard.component';
-import { Web3AuthLoginProvider, SocialLoginProviders, useAuth } from '../../types';
-import { LoginProviderListItemComponent } from '../login-provider/login-provider-list-item.component';
+import { useIsSOL } from '../../../context';
+import { SocialLoginProviders, useAuth, Web3AuthLoginProvider } from '../../types';
+import {
+  LoginProviderListItemComponent
+} from '../login-provider/login-provider-list-item.component';
 import { SWIBLogins } from './swib-logins.component';
+import classNames from 'classnames';
 
 const SocialsComponent = memo<{
   onClose(): void;
@@ -14,6 +26,28 @@ const SocialsComponent = memo<{
   const [isShowingMore, setShowingMore] = useState(false);
 
   const [email, setEmail] = useState<string | undefined>();
+  const { wallets: walletsFromSystem, wallet: currentWallet, select, ...asdf } = useWallet();
+  const { login, loginStatus, identity, clear, ...asdff } = useSiws();
+  const isSOL = useIsSOL();
+  // Some wallets don't work with siws yet
+  const wallets = useMemo(() => walletsFromSystem
+    .filter((wallet) => wallet.adapter.name !== 'Solflare'), [walletsFromSystem]);
+  const hasSomeConnectedWallets = useMemo(
+    () => wallets.some((wallet) => wallet.adapter.connected),
+    [wallets],
+  );
+
+  const loginToSolana = useMutation({
+    mutationFn: async (wallet: Wallet) => {
+      if (!wallet)
+        throw new Error("No wallet selected");
+
+      await wallet.adapter.connect();
+      await login();
+    },
+    onSuccess: onClose,
+  })
+
 
   const shownLoginProviders = useMemo(
     () =>
@@ -37,7 +71,53 @@ const SocialsComponent = memo<{
         })}
       />
 
-      <List>
+      {!identity && currentWallet && (
+        <ButtonComponent onClick={login}>
+          Continue to {currentWallet.adapter.name}
+        </ButtonComponent>
+      )}
+
+      <ErrorComponent error={loginStatus.error} />
+
+      {isSOL && (
+        <List label="Connect Wallet">
+          {wallets.map((wallet) => (
+            <ListItem
+              key={wallet.adapter.name}
+              onClick={() => loginToSolana.mutateAsync(wallet)}
+              icon={(
+                <div className={classNames("w-6 ml-5 mr-4 relative", {
+                  "opacity-50 pointer-events-none": wallet.readyState !== "Installed",
+                })}>
+                  {wallet.adapter.connected && <span className='bg-green-500 absolute top-0 -translate-1/3 left-0 size-2 rounded-full' />}
+                  {wallet.readyState !== "Installed" && <span className='bg-red-500 absolute top-0 -translate-1/3 left-0 size-2 rounded-full' />}
+                  <WalletIcon
+                    wallet={wallet}
+                    className={classNames({
+                      "opacity-80 group-hover:opacity-100 transition-opacity": !wallet.adapter.connected && hasSomeConnectedWallets,
+                    })}
+                  />
+                </div>
+              )}
+            >
+              {(
+                loginToSolana.variables?.adapter.name === wallet.adapter.name &&
+                loginToSolana.isPending
+              ) ? (
+                <LoadingAnimationComponent variant="shimmer" className='ml-1'>Connecting to {wallet.adapter.name}</LoadingAnimationComponent>
+              ) : (
+                <span>{wallet.adapter.name}</span>
+              )}
+
+              {wallet.readyState !== "Installed" && (
+                <span className="text-red-500 ml-2">Not installed</span>
+              )}
+            </ListItem>
+          ))}
+        </List>
+      )}
+
+      <List label="Login with">
         {shownLoginProviders.map((loginProvider) => (
           <LoginProviderListItemComponent
             key={loginProvider}

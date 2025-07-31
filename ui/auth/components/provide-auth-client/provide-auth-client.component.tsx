@@ -8,6 +8,7 @@ import { Ed25519KeyIdentity } from '@dfinity/identity';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { useLaserEyes } from '@omnisat/lasereyes';
 import { WALLET_ADAPTERS } from '@web3auth/base';
+import { SiwsIdentityProvider, useSiws } from 'ic-siws-js/react';
 import { DateToBigIntTimestamp, IsDev, useMutation, useQuery } from '@zk-game-dao/ui';
 
 import { Queries } from '../../../queries';
@@ -16,6 +17,8 @@ import { host, IIHost } from '../../types/iiauth';
 import { web3auth, Web3AuthLoginProvider } from '../../types/web3auth';
 import { SupportedSIWBProvider } from '../provide-btc-logins/provide-btc-logins.component';
 import { SignupModalComponent } from '../signup-modal/signup-modal.component';
+import type { SiwsIdentityContextType } from 'ic-siws-js/src/context.type';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 export const ProvideAuthClient = memo<PropsWithChildren>(({ children }) => {
   const [{ web3AuthProvider, internetIdentityProvider }, setWeb3AuthProvider] =
@@ -23,6 +26,9 @@ export const ProvideAuthClient = memo<PropsWithChildren>(({ children }) => {
 
   const siwb = useSiwbIdentity();
   const laserEyes = useLaserEyes();
+
+  const siws = useSiws() as SiwsIdentityContextType;
+  const { wallet: currentSolanaWallet } = useWallet();
 
   const [showLoginModal, setShowLoginModal] = useState<{ onSuccess: (data: AuthData) => void; onError: (error: Error) => void }>();
 
@@ -53,6 +59,8 @@ export const ProvideAuthClient = memo<PropsWithChildren>(({ children }) => {
   const { data: authData = null } = useQuery({
     queryKey: Queries.auth.key({
       siwb,
+      siws,
+      solanaWallet: currentSolanaWallet ?? undefined,
       laserEyes,
       internetIdentityProvider,
     }),
@@ -75,6 +83,26 @@ export const ProvideAuthClient = memo<PropsWithChildren>(({ children }) => {
           }),
         };
       }
+
+      if (currentSolanaWallet?.adapter.name && siws.identity && siws.identity.getDelegation().delegations.every(v => v.delegation.expiration > DateToBigIntTimestamp(new Date()))) {
+        const agent = HttpAgent.createSync({ identity: siws.identity, host: host });
+
+        // Fetch root key only in development to bypass certificate validation
+        if (IsDev) await agent.fetchRootKey();
+
+        return {
+          type: "siws",
+          provider: { type: 'siws', provider: currentSolanaWallet.adapter.name },
+          agent,
+          identity: siws.identity,
+          principal: siws.identity.getPrincipal(),
+          accountIdentifier: AccountIdentifier.fromPrincipal({
+            principal: siws.identity.getPrincipal(),
+          }),
+        };
+      }
+
+
       // Try to log in with internet identity
       try {
         if (!internetIdentityProvider)

@@ -8,5 +8,6 @@ dist/
 # dfx temporary files
 .dfx/
 src/declarations
+declarations
 
 .env

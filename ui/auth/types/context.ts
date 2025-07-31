@@ -1,18 +1,21 @@
+import { createContext, useContext } from "react";
+
 import { HttpAgent, Identity } from "@dfinity/agent";
 import { AuthClient } from "@dfinity/auth-client";
 import { AccountIdentifier } from "@dfinity/ledger-icp";
 import { Principal } from "@dfinity/principal";
 import { IProvider } from "@web3auth/base";
-import { createContext, useContext } from "react";
 
 import { AuthDataInternetIdentity } from "./iiauth";
 import { AuthDataSiwb } from "./siwb";
+import { AuthDataSiws } from "./siws";
 import { AuthDataWeb3Auth, Web3AuthLoginProvider } from "./web3auth";
 
 export type AuthData = (
   | AuthDataInternetIdentity
   | AuthDataWeb3Auth
   | AuthDataSiwb
+  | AuthDataSiws
 ) & {
   agent: HttpAgent;
   identity: Identity;

@@ -10,6 +10,7 @@ const CurrencyConfigContext = createContext<CurrencyConfigContextType>({
   selectedCurrency: { ICP: null },
   setSelectedCurrency: () => { },
   isBTC: false,
+  isSOL: false,
 });
 
 export const ProvideCurrencyConfig = memo<PropsWithChildren<{ enabledNetworks?: CurrencyNetwork[]; disabledNetworks?: CurrencyNetwork[] }>>(
@@ -21,7 +22,10 @@ export const ProvideCurrencyConfig = memo<PropsWithChildren<{ enabledNetworks?: 
       return networks.filter(network => disabledNetworks.findIndex(disabledNetwork => disabledNetwork === network) === -1);
     }, [_enabledNetworks, disabledNetworks]);
 
+
     const isBTC = useMemo(() => getIsBTC(enabledNetworks), [enabledNetworks]);
+    const isSOL = useMemo(() => getIsSOL(enabledNetworks), [enabledNetworks]);
+    console.log("Enabled networks", { enabledNetworks, isSOL });
 
     const [_selectedCurrency, _setSelectedCurrency] = usePersistentState<string>(
       'selectedCurrency',
@@ -35,7 +39,7 @@ export const ProvideCurrencyConfig = memo<PropsWithChildren<{ enabledNetworks?: 
     }, [_setSelectedCurrency, isBTC]);
 
     return (
-      <CurrencyConfigContext.Provider value={{ isBTC, enabledNetworks, selectedCurrency, setSelectedCurrency }}>
+      <CurrencyConfigContext.Provider value={{ isBTC, isSOL, enabledNetworks, selectedCurrency, setSelectedCurrency }}>
         {children}
       </CurrencyConfigContext.Provider>
     )
@@ -49,11 +53,17 @@ export const useEnabledNetworks = () => {
 };
 
 export const getIsBTC = (enabledNetworks: CurrencyNetwork[]) => enabledNetworks.length === 1 && enabledNetworks.includes('btc');
+export const getIsSOL = (enabledNetworks: CurrencyNetwork[]) => enabledNetworks.includes('sol') && !getIsBTC(enabledNetworks);
 
 // This is a temporary solution
 export const useIsBTC = () => {
   const isBTC = useCurrencyConfig().isBTC;
   return useMemo(() => isBTC, [isBTC]);
+};
+
+export const useIsSOL = () => {
+  const isSOL = useCurrencyConfig().isSOL;
+  return useMemo(() => isSOL, [isSOL]);
 };
 
 export const useSelectedCurrency = () => {

@@ -1,6 +1,6 @@
 import { Currency } from "./currency";
 
-export const CURRENCY_NETWORKS = ["ic", "btc", "eth"] as const;
+export const CURRENCY_NETWORKS = ["ic", "btc", "eth", "sol"] as const;
 export type CurrencyNetwork = (typeof CURRENCY_NETWORKS)[number];
 
 export type CurrencyConfigContextType = {
@@ -8,4 +8,5 @@ export type CurrencyConfigContextType = {
   selectedCurrency: Currency;
   setSelectedCurrency(currency: Currency): void;
   isBTC: boolean;
+  isSOL: boolean;
 };

@@ -22,6 +22,7 @@ import { ProvideTokenRegistry } from '../ui/context/token-registry.context';
 import { CurrencyNetwork } from '../ui/types/currency-config.context';
 
 import type { Preview } from "@storybook/react";
+import { ProvideSolanaLogins } from '../ui/auth/components/provide-solana-logins/provide-solana-logins.component';
 
 BigInt.prototype.toJSON = function () {
   return JSON.rawJSON(this.toString());
@@ -212,13 +213,15 @@ const preview: Preview = {
                       enabledNetworks={enabledNetworks}
                     >
                       <ProvideTokenRegistry>
-                        <ProvideSiwbLogins siwbProviderCanisterId={Principal.fromText('j2let-saaaa-aaaam-qds2q-cai')}>
-                          <PreviewAuth authContext={authContextValue} >
-                            <EI6963Provider >
-                              <Story />
-                            </EI6963Provider>
-                          </PreviewAuth>
-                        </ProvideSiwbLogins>
+                        <ProvideSolanaLogins siwsProvidedCanisterId={Principal.fromText('uxrrr-q7777-77774-qaaaq-cai')}>
+                          <ProvideSiwbLogins siwbProviderCanisterId={Principal.fromText('j2let-saaaa-aaaam-qds2q-cai')}>
+                            <PreviewAuth authContext={authContextValue} >
+                              <EI6963Provider >
+                                <Story />
+                              </EI6963Provider>
+                            </PreviewAuth>
+                          </ProvideSiwbLogins>
+                        </ProvideSolanaLogins>
                       </ProvideTokenRegistry>
                     </ProvideCurrencyConfig >
                   </ProvideUI>
