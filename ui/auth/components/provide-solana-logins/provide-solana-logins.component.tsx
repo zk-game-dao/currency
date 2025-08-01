@@ -1,9 +1,10 @@
 import { SiwsIdentityProvider, useSiws } from 'ic-siws-js/react';
-import { memo, PropsWithChildren } from 'react';
+import { memo, PropsWithChildren, useMemo } from 'react';
 
 import { Principal } from '@dfinity/principal';
 import { Adapter, WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, useWallet, WalletProvider } from '@solana/wallet-adapter-react';
+import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import { useQuery } from '@tanstack/react-query';
 import { IC_HOST } from '@zk-game-dao/ui';
@@ -58,8 +59,11 @@ ProvideSiws.displayName = "ProvideSiws";
 
 export const ProvideSolanaLogins = memo<Props>((props) => {
   const network = WalletAdapterNetwork.Mainnet;
-  const endpoint = clusterApiUrl(network);
-  const wallets: Adapter[] = [];
+  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const wallets = useMemo((): Adapter[] => [
+    new PhantomWalletAdapter(),
+    new SolflareWalletAdapter()
+  ], []);
 
   return (
     <ConnectionProvider endpoint={endpoint}>
