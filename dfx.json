@@ -1,5 +1,5 @@
 {
-  "dfx": "0.24.2",
+  "dfx": "0.27.0",
   "version": 1,
   "output_env_file": ".env",
   "defaults": {
@@ -32,6 +32,15 @@
       "candid": "target/ic/ckbtc_kyt.did",
       "wasm": "target/ic/ckbtc_kyt.wasm",
       "specified_id": "pjihx-aaaaa-aaaar-qaaka-cai"
+    },
+    "ic_siws_provider": {
+      "candid": "https://github.com/kristoferlund/ic-siws/releases/download/v0.1.0/ic_siws_provider.did",
+      "declarations": {
+        "output": "declarations/ic_siws_provider"
+      },
+      "type": "custom",
+      "wasm": "https://github.com/kristoferlund/ic-siws/releases/download/v0.1.0/ic_siws_provider.wasm.gz",
+      "specified_id": "uxrrr-q7777-77774-qaaaq-cai"
     }
   },
   "networks": {

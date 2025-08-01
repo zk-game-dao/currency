@@ -1,9 +1,15 @@
-import { ErrorComponent, FormComponent, Image, Interactable, List, Modal, TitleTextComponent } from '@zk-game-dao/ui';
 import { memo, useMemo, useState } from 'react';
 
+import {
+  ErrorComponent, FormComponent, Image, Interactable, List, Modal, TitleTextComponent
+} from '@zk-game-dao/ui';
+
 import { NetworkGuardComponent } from '../../../components/network-guard/network-guard.component';
-import { Web3AuthLoginProvider, SocialLoginProviders, useAuth } from '../../types';
-import { LoginProviderListItemComponent } from '../login-provider/login-provider-list-item.component';
+import { SocialLoginProviders, useAuth, Web3AuthLoginProvider } from '../../types';
+import {
+  LoginProviderListItemComponent
+} from '../login-provider/login-provider-list-item.component';
+import { SolanaLoginsComponent } from '../provide-solana-logins/solana-logins.component';
 import { SWIBLogins } from './swib-logins.component';
 
 const SocialsComponent = memo<{
@@ -14,6 +20,7 @@ const SocialsComponent = memo<{
   const [isShowingMore, setShowingMore] = useState(false);
 
   const [email, setEmail] = useState<string | undefined>();
+  // Some wallets don't work with siws yet
 
   const shownLoginProviders = useMemo(
     () =>
@@ -23,7 +30,6 @@ const SocialsComponent = memo<{
 
   return (
     <div className="gap-3 flex flex-col justify-center">
-
       {/* Email login */}
       <FormComponent
         fields={[{ label: "Email", type: "email", name: "email" }]}
@@ -37,7 +43,9 @@ const SocialsComponent = memo<{
         })}
       />
 
-      <List>
+      <SolanaLoginsComponent onSuccess={onClose} />
+
+      <List label="Login with">
         {shownLoginProviders.map((loginProvider) => (
           <LoginProviderListItemComponent
             key={loginProvider}
