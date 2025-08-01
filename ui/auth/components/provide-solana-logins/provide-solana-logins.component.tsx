@@ -1,31 +1,28 @@
-import '@solana/wallet-adapter-react-ui/styles.css';
-
 import { SiwsIdentityProvider, useSiws } from 'ic-siws-js/react';
 import { memo, PropsWithChildren } from 'react';
 
 import { Principal } from '@dfinity/principal';
 import { Adapter, WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, useWallet, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
 import { useQuery } from '@tanstack/react-query';
+import { IC_HOST } from '@zk-game-dao/ui';
 
 type Props = PropsWithChildren<{
   siwsProvidedCanisterId: Principal;
 }>;
 
-const InnerProvider = memo<PropsWithChildren<PropsWithChildren>>(({ children }) => {
-  const { login, loginStatus, identity, clear } = useSiws();
+const AutoLoginProvider = memo<PropsWithChildren<PropsWithChildren>>(({ children }) => {
+  const { login, identity } = useSiws();
   const { wallet } = useWallet();
 
-  const loginQuery = useQuery({
+  useQuery({
     queryKey: [
       "perform-login-siws",
       identity?.getPrincipal().toText(),
       wallet?.adapter.name,
     ],
     queryFn: async () => {
-      console.log('loginStatus', loginStatus);
       if (!wallet || identity) return;
       await login();
       return true;
@@ -48,12 +45,12 @@ const ProvideSiws = memo<Props>(({ children, siwsProvidedCanisterId }) => {
       canisterId={siwsProvidedCanisterId.toText()}
       adapter={wallet?.adapter}
       httpAgentOptions={{
-        host: 'http://127.0.0.1:4943/'
+        host: IC_HOST
       }}
     >
-      <InnerProvider>
+      <AutoLoginProvider>
         {children}
-      </InnerProvider>
+      </AutoLoginProvider>
     </SiwsIdentityProvider>
   );
 });
@@ -67,9 +64,7 @@ export const ProvideSolanaLogins = memo<Props>((props) => {
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          <ProvideSiws {...props} />
-        </WalletModalProvider>
+        <ProvideSiws {...props} />
       </WalletProvider>
     </ConnectionProvider>
   );

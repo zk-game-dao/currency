@@ -1,12 +1,12 @@
+import classNames from 'classnames';
+import { useSiws } from 'ic-siws-js/react';
 import { memo, useMemo, useState } from 'react';
 
 import { useWallet, Wallet } from '@solana/wallet-adapter-react';
 import { WalletIcon } from '@solana/wallet-adapter-react-ui';
-import { useSiws } from "ic-siws-js/react";
 import {
-  ButtonComponent,
-  ErrorComponent, FormComponent, Image, Interactable, List, ListItem, LoadingAnimationComponent, Modal, TitleTextComponent,
-  useMutation
+  ButtonComponent, ErrorComponent, FormComponent, Image, Interactable, List, ListItem,
+  LoadingAnimationComponent, Modal, TitleTextComponent, useMutation
 } from '@zk-game-dao/ui';
 
 import { NetworkGuardComponent } from '../../../components/network-guard/network-guard.component';
@@ -16,7 +16,6 @@ import {
   LoginProviderListItemComponent
 } from '../login-provider/login-provider-list-item.component';
 import { SWIBLogins } from './swib-logins.component';
-import classNames from 'classnames';
 
 const SocialsComponent = memo<{
   onClose(): void;
@@ -26,8 +25,8 @@ const SocialsComponent = memo<{
   const [isShowingMore, setShowingMore] = useState(false);
 
   const [email, setEmail] = useState<string | undefined>();
-  const { wallets: walletsFromSystem, wallet: currentWallet, select, ...asdf } = useWallet();
-  const { login, loginStatus, identity, clear, ...asdff } = useSiws();
+  const { wallets: walletsFromSystem, wallet: currentWallet } = useWallet();
+  const { login, identity } = useSiws();
   const isSOL = useIsSOL();
   // Some wallets don't work with siws yet
   const wallets = useMemo(() => walletsFromSystem
