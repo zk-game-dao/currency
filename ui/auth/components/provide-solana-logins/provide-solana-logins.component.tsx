@@ -10,8 +10,6 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
 import { useQuery } from '@tanstack/react-query';
 
-import { host } from '../../types';
-
 type Props = PropsWithChildren<{
   siwsProvidedCanisterId: Principal;
 }>;

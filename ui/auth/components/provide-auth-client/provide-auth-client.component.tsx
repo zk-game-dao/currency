@@ -1,5 +1,6 @@
 import { Buffer } from 'buffer';
 import { useSiwbIdentity } from 'ic-siwb-lasereyes-connector';
+import { useSiws } from 'ic-siws-js/react';
 import { memo, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
 import { HttpAgent } from '@dfinity/agent';
@@ -7,8 +8,8 @@ import { AuthClient } from '@dfinity/auth-client';
 import { Ed25519KeyIdentity } from '@dfinity/identity';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { useLaserEyes } from '@omnisat/lasereyes';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { WALLET_ADAPTERS } from '@web3auth/base';
-import { SiwsIdentityProvider, useSiws } from 'ic-siws-js/react';
 import { DateToBigIntTimestamp, IsDev, useMutation, useQuery } from '@zk-game-dao/ui';
 
 import { Queries } from '../../../queries';
@@ -17,8 +18,8 @@ import { host, IIHost } from '../../types/iiauth';
 import { web3auth, Web3AuthLoginProvider } from '../../types/web3auth';
 import { SupportedSIWBProvider } from '../provide-btc-logins/provide-btc-logins.component';
 import { SignupModalComponent } from '../signup-modal/signup-modal.component';
-import type { SiwsIdentityContextType } from 'ic-siws-js/src/context.type';
-import { useWallet } from '@solana/wallet-adapter-react';
+
+import type { SiwsIdentityContextType } from 'ic-siws-js';
 
 export const ProvideAuthClient = memo<PropsWithChildren>(({ children }) => {
   const [{ web3AuthProvider, internetIdentityProvider }, setWeb3AuthProvider] =

@@ -28,7 +28,12 @@
     "@web3auth/no-modal": "^9.5.4",
     "@zk-game-dao/ui": "^0.2.13",
     "bitcoinjs-lib": "^6.1.7",
-    "ic-siwb-lasereyes-connector": "^0.1.9"
+    "ic-siwb-lasereyes-connector": "^0.1.9",
+    "@solana/wallet-adapter-base": "^0.9.27",
+    "@solana/wallet-adapter-react": "^0.15.39",
+    "@solana/wallet-adapter-react-ui": "^0.9.39",
+    "@solana/wallet-adapter-wallets": "^0.19.37",
+    "ic-siws-js": "^0.1.0"
   },
   "devDependencies": {
     "@analytics/google-analytics": "^1.0.7",

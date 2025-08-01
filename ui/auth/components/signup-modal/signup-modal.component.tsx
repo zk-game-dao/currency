@@ -37,7 +37,7 @@ const SocialsComponent = memo<{
     [wallets],
   );
 
-  const loginToSolana = useMutation({
+  const loginToSolanaMut = useMutation({
     mutationFn: async (wallet: Wallet) => {
       if (!wallet)
         throw new Error("No wallet selected");
@@ -77,14 +77,14 @@ const SocialsComponent = memo<{
         </ButtonComponent>
       )}
 
-      <ErrorComponent error={loginStatus.error} />
+      <ErrorComponent error={loginToSolanaMut.error} />
 
       {isSOL && (
         <List label="Connect Wallet">
           {wallets.map((wallet) => (
             <ListItem
               key={wallet.adapter.name}
-              onClick={() => loginToSolana.mutateAsync(wallet)}
+              onClick={() => loginToSolanaMut.mutateAsync(wallet)}
               icon={(
                 <div className={classNames("w-6 ml-5 mr-4 relative", {
                   "opacity-50 pointer-events-none": wallet.readyState !== "Installed",
@@ -101,8 +101,8 @@ const SocialsComponent = memo<{
               )}
             >
               {(
-                loginToSolana.variables?.adapter.name === wallet.adapter.name &&
-                loginToSolana.isPending
+                loginToSolanaMut.variables?.adapter.name === wallet.adapter.name &&
+                loginToSolanaMut.isPending
               ) ? (
                 <LoadingAnimationComponent variant="shimmer" className='ml-1'>Connecting to {wallet.adapter.name}</LoadingAnimationComponent>
               ) : (

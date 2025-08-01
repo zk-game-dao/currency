@@ -8,7 +8,7 @@ import { queryKeyFactory } from "@zk-game-dao/ui";
 
 import { CurrencyReceiver, CurrencyType } from "./types";
 
-import type { SiwsIdentityContextType } from "ic-siws-js/src/context.type";
+import type { SiwsIdentityContextType } from "ic-siws-js";
 import type { Wallet as SolanaWallet } from "@solana/wallet-adapter-react";
 
 export const Queries = {
