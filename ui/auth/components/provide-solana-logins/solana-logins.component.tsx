@@ -5,7 +5,7 @@ import { memo, useMemo } from 'react';
 import { useWallet, Wallet } from '@solana/wallet-adapter-react';
 import { WalletIcon } from '@solana/wallet-adapter-react-ui';
 import {
-  ButtonComponent, ErrorComponent, List, ListItem, LoadingAnimationComponent, useMutation
+  ButtonComponent, ErrorComponent, Interactable, List, ListItem, LoadingAnimationComponent, useMutation
 } from '@zk-game-dao/ui';
 
 import { useIsSOL } from '../../../context';
@@ -13,11 +13,13 @@ import { useIsSOL } from '../../../context';
 export const SolanaLoginsComponent = memo<{
   onSuccess(): void;
 }>(({ onSuccess }) => {
-  const { wallets: walletsFromSystem, wallet: currentWallet } = useWallet();
-  const { login, identity, clear } = useSiws();
+  const { wallets: walletsFromSystem, wallet: currentWallet, disconnect } = useWallet();
+  const { login, identity, clear, prepareLogin, setAdapter } = useSiws();
   const isSOL = useIsSOL();
   // Some wallets don't work with siws yet
-  const wallets = useMemo(() => walletsFromSystem, [walletsFromSystem]);
+  const wallets = useMemo(() => walletsFromSystem.filter(
+    ({ adapter }) => "signIn" in adapter && typeof adapter.signIn === "function"
+  ), [walletsFromSystem]);
   const hasSomeConnectedWallets = useMemo(
     () => wallets.some((wallet) => wallet.adapter.connected),
     [wallets],
@@ -29,7 +31,9 @@ export const SolanaLoginsComponent = memo<{
         throw new Error("No wallet selected");
 
       await wallet.adapter.connect();
-      // await login();
+
+      await setAdapter(wallet.adapter);
+      await login();
     },
     onSuccess: onSuccess,
   })
@@ -47,13 +51,18 @@ export const SolanaLoginsComponent = memo<{
       </style>
 
       {!identity && currentWallet && (
-        <ButtonComponent onClick={login}>
-          Continue log in with {currentWallet.adapter.name}
-        </ButtonComponent>
+        <Interactable>
+          <ButtonComponent onClick={login}>
+            Continue log in with {currentWallet.adapter.name}
+          </ButtonComponent>
+        </Interactable>
       )}
 
       {identity && (
-        <ButtonComponent onClick={clear}>
+        <ButtonComponent onClick={() => {
+          clear();
+          disconnect();
+        }}>
           Log out
         </ButtonComponent>
       )}
