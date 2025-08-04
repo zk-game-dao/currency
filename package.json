@@ -14,6 +14,9 @@
   "license": "ISC",
   "description": "",
   "type": "module",
+  "dependencies": {
+    "uuid": "^11.0.5"
+  },
   "peerDependencies": {
     "@dfinity/auth-client": "^2.2.0",
     "@dfinity/ckbtc": "^3.1.10",
@@ -135,7 +138,6 @@
     "typescript-eslint": "^8.15.0",
     "url-loader": "^4.1.1",
     "usergeek-ic-js": "^1.0.6",
-    "uuid": "^11.0.5",
     "vite": "^6.1.0",
     "vite-plugin-dts": "^4.5.0",
     "vite-plugin-environment": "^1.1.3",
