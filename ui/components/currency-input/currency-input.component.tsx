@@ -6,7 +6,7 @@ import { BigIntToBig, BigToBigInt, NumberInputComponent, NumberInputValue } from
 import { useCurrencyManagerMeta } from '../../hooks/currency-manager.hook';
 import { CurrencyType } from '../../types/currency';
 import { CurrencyTypeSerializer } from '../../utils';
-import { CurrencyMetaIconComponent, CurrencyTypeIconComponent } from '../token-icon/token-icon.component';
+import { CurrencyMetaIconComponent } from '../token-icon/token-icon.component';
 
 export type CurrencyInputProps = Omit<NumberInputValue, 'minQuickAction' | 'maxQuickAction' | 'step' | 'maxDecimals' | 'symbol' | 'defaultValue' | 'min' | 'max'> & {
   currencyType: CurrencyType;

@@ -18,6 +18,7 @@ import { useCurrencyManagerMeta, useRequiredCurrencyManager } from '../../hooks/
 import { useBalance } from '../../hooks/balance';
 import { TokenAmountToBig } from '../../utils/token-amount-conversion';
 import { CurrencyTypeIconComponent } from '../token-icon/token-icon.component';
+import { CurrencyInputComponent } from '../currency-input';
 
 const WalletSelectionComponent = memo<{ currency: Currency; }>(({ currency }) => {
   const { web3WalletType, setWeb3WalletType, mode, web3WithdrawExternalWalletAddress, setWeb3WithdrawExternalWalletAddress } = useWalletModalContentContext();
@@ -135,24 +136,34 @@ export const ReceiverSelectorComponent = memo<{ currency: Currency }>(({ currenc
     <>
       {isShowingEthCurrency && <AllowanceComponent currency={currency} />}
       <List key={(isShowingEthCurrency ? `Eth-${mode}` : 'IC')}>
-        <NumberInputComponent
+        <CurrencyInputComponent
           label="Amount"
-          value={Number(amount) / thousands}
-          onChange={(v) =>
-            setAmount(BigInt(Math.floor((v as number) * thousands)))
-          }
-          min={0}
+          value={amount}
+          onChange={setAmount}
+          currencyType={{ Real: currency }}
+          min={0n}
           max={
             mode === "deposit"
               ? undefined
-              : TokenAmountToBig(
-                walletBalance,
-                meta,
-              )
+              : walletBalance
           }
-          symbol={
-            <CurrencyTypeIconComponent className="w-[24px] h-[24px] mr-1" currencyType={{ Real: currency }} />
-          }
+
+        // value={Number(amount) / thousands}
+        // onChange={(v) =>
+        //   setAmount(BigInt(Math.floor((v as number) * thousands)))
+        // }
+        // min={0}
+        // max={
+        //   mode === "deposit"
+        //     ? undefined
+        //     : TokenAmountToBig(
+        //       walletBalance,
+        //       meta,
+        //     )
+        // }
+        // symbol={
+        //   <CurrencyTypeIconComponent className="w-[24px] h-[24px] mr-1" currencyType={{ Real: currency }} />
+        // }
         />
         {!isShowingEthCurrency ? (
           <ListItem

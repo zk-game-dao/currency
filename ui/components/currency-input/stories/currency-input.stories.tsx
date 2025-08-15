@@ -28,6 +28,7 @@ type Story = StoryObj<typeof CurrencyInputComponent>;
 
 export const Default: Story = {};
 export const DefaultICP: Story = { args: { currencyType: { Real: { ICP: null } }, value: 100000n } };
+export const DefaultCKUSDT: Story = { args: { currencyType: { Real: { CKETHToken: { USDT: null } } }, value: 1000000n } };
 export const DefaultDCD: Story = { args: { currencyType: DCD_MOCK.currencyType, value: 100000n } };
 export const SmallAmount: Story = {
   args: {
