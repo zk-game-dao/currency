@@ -113,10 +113,21 @@ export const buildICRC1CurrencyManager = async (
   agent: HttpAgent,
   currency: Currency
 ): Promise<CurrencyManager> => {
-  return {
-    currencyType: { Real: currency },
-    meta: await getManagerMetadata(currency, agent),
-  };
+  try {
+    return {
+      currencyType: { Real: currency },
+      meta: await getManagerMetadata(currency, agent),
+    };
+  } catch (error) {
+    console.error(
+      `Failed to fetch metadata for currency type ${JSON.stringify(currency)}`,
+      error
+    );
+    return {
+      currencyType: { Real: currency },
+      meta: getStaticManagerMetadata(currency),
+    };
+  }
 };
 
 export const buildCKTokenManager = async (

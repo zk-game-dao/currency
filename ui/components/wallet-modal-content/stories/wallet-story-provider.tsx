@@ -8,7 +8,7 @@ import { Principal } from '@dfinity/principal';
 import { encodeSymbolTo8Bytes } from '../../../utils';
 
 export type WalletStoryProviderProps = {
-  selectedWallet: 'ICP' | 'ETH' | 'BTC' | 'DCD';
+  selectedWallet: 'ICP' | 'ETH' | 'BTC' | 'DCD' | 'USDT' | 'ckUSDT';
   requiredBalance?: bigint;
 };
 
@@ -51,6 +51,12 @@ const BuildProps = (args: WalletStoryProviderProps): { currency: Currency } => {
       break;
     case 'DCD':
       currency = { GenericICRC1: { decimals: 8, ledger_id: Principal.from('xsi2v-cyaaa-aaaaq-aabfq-cai'), symbol: encodeSymbolTo8Bytes('DCD') } }
+      break;
+    case 'USDT':
+      currency = { CKETHToken: { USDT: null } }
+      break;
+    case 'ckUSDT':
+      currency = { GenericICRC1: { decimals: 6, ledger_id: Principal.from('cngnf-vqaaa-aaaar-qag4q-cai'), symbol: encodeSymbolTo8Bytes('ckUSDT') } }
       break;
   }
 
